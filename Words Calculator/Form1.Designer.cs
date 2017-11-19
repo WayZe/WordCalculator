@@ -70,6 +70,7 @@
             this.Controls.Add(this.searchComboBox);
             this.Name = "mainForm";
             this.Text = "Подсчёт слов";
+            this.Load += new System.EventHandler(this.mainForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
