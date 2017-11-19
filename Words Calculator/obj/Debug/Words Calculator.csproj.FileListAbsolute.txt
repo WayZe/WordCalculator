@@ -8,3 +8,13 @@ D:\Langs\C#\Words Calculator\Words Calculator\obj\Debug\Words Calculator.csproj.
 D:\Langs\C#\Words Calculator\Words Calculator\obj\Debug\Words Calculator.csproj.CoreCompileInputs.cache
 D:\Langs\C#\Words Calculator\Words Calculator\obj\Debug\Words Calculator.exe
 D:\Langs\C#\Words Calculator\Words Calculator\obj\Debug\Words Calculator.pdb
+D:\Langs\C#\WordsCalculator\Words Calculator\bin\Debug\Words Calculator.exe.config
+D:\Langs\C#\WordsCalculator\Words Calculator\bin\Debug\Words Calculator.exe
+D:\Langs\C#\WordsCalculator\Words Calculator\bin\Debug\Words Calculator.pdb
+D:\Langs\C#\WordsCalculator\Words Calculator\obj\Debug\Words Calculator.csprojResolveAssemblyReference.cache
+D:\Langs\C#\WordsCalculator\Words Calculator\obj\Debug\Words_Calculator.mainForm.resources
+D:\Langs\C#\WordsCalculator\Words Calculator\obj\Debug\Words_Calculator.Properties.Resources.resources
+D:\Langs\C#\WordsCalculator\Words Calculator\obj\Debug\Words Calculator.csproj.GenerateResource.Cache
+D:\Langs\C#\WordsCalculator\Words Calculator\obj\Debug\Words Calculator.csproj.CoreCompileInputs.cache
+D:\Langs\C#\WordsCalculator\Words Calculator\obj\Debug\Words Calculator.exe
+D:\Langs\C#\WordsCalculator\Words Calculator\obj\Debug\Words Calculator.pdb
