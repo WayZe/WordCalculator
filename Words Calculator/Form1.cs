@@ -13,20 +13,22 @@ namespace Words_Calculator
 {
     public partial class mainForm : Form
     {
+        List<String> partsOfSpeechFromTextList = new List<String>();
         private List<String> stringList = new List<String>();
         private String fileString;
         private const String filePath = "D:\\Langs\\C#\\WordsCalculator\\InputFile.txt";
+        private String[] adjectiveEndsList = { "ая", "яя", "ой", "ей", "ую", "юю", "ый", "ий", "ого", "его", "ому", "ему", "ым", "им", "ом", "ем", "ое", "ее", "ых", "ые"};
+        private String[] allPartsOfSpeechArray = {"Прилагательное"};
 
         public mainForm()
         {
             InitializeComponent();
-            //stringList.Add("");
         }
 
         private void mainForm_Load(object sender, EventArgs e)
         {
             searchComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            searchComboBox.Items.Add("Прилагательное");
+            searchComboBox.Items.Add(allPartsOfSpeechArray.ElementAt(0));
             searchComboBox.SelectedIndex = 0;
 
         }
@@ -34,7 +36,18 @@ namespace Words_Calculator
         private void searchButton_Click(object sender, EventArgs e)
         {
             readText();
+
             listCreating();
+
+            List<String> partsOfSpeechFromTextList = partsOfSpeechDetermining();
+
+            int[] amountOfEveryWords = partsOfSpeechCalculation();
+
+            for (int elementNumber = 0; elementNumber < partsOfSpeechFromTextList.Count; elementNumber++)
+            {
+                if (partsOfSpeechFromTextList[elementNumber] == allPartsOfSpeechArray[0])
+                    Console.WriteLine(stringList[elementNumber] + " " + amountOfEveryWords[elementNumber]);
+            }
 
         }
 
@@ -61,21 +74,65 @@ namespace Words_Calculator
             char[] separatorArray = {',', ' ', '.', '\n'};
             String[] separatorArrayt = fileString.Split(separatorArray);
 
-            //Console.WriteLine(separatorArrayt.Count());
-            //List<String> stringList = new List<String>();
-
             foreach (String element in separatorArrayt)
             {
                 if(element != "")
                     stringList.Add(element);
             }
+        }
 
-            foreach (String element in stringList)
+        /// <summary>
+        /// Определение частей речи для всех слов
+        /// </summary>
+        /// <returns> Возвращает список partsOfSpeechFromTextList, 
+        /// каждый элемент partsOfSpeechFromTextList является частью речи 
+        /// для элемента с таким же индексом из массива списка всех слов текста </returns>
+        private List<String> partsOfSpeechDetermining()
+        {
+            for (int elementNumber = 0; elementNumber < stringList.Count; elementNumber++)
+                partsOfSpeechFromTextList.Add("");
+
+            for (int elementNumber = 0; elementNumber < stringList.Count; elementNumber++)
             {
-                System.Console.WriteLine(element);
+                String currentWord = stringList.ElementAt(elementNumber);
+
+                bool isAdjective = false;
+
+                for (int endNumber = 0; endNumber < adjectiveEndsList.Length; endNumber++)
+                { 
+                    if (currentWord.Length - adjectiveEndsList[endNumber].Length > 0)
+                        if (currentWord.Substring(currentWord.Length - adjectiveEndsList[endNumber].Length) == adjectiveEndsList[endNumber])
+                            isAdjective = true;
+                }
+
+                if (isAdjective)
+                {
+                    partsOfSpeechFromTextList[elementNumber] = allPartsOfSpeechArray[0];
+                }
             }
 
-            Console.WriteLine(stringList.Count());
+            return partsOfSpeechFromTextList;
+        }
+
+        private int[] partsOfSpeechCalculation()
+        {
+            int[] amountOfEveryWords = new int[stringList.Count];
+            for (int wordNumber = 0; wordNumber < stringList.Count; wordNumber++) amountOfEveryWords[wordNumber] = 1;
+
+            for (int currentElementNumber = 0; currentElementNumber < stringList.Count; currentElementNumber++)
+            {
+                for (int anotherElementNumber = currentElementNumber + 1; anotherElementNumber < stringList.Count; anotherElementNumber++)
+                {
+                    if (stringList.ElementAt(currentElementNumber) == stringList.ElementAt(anotherElementNumber))
+                    {
+                        stringList.RemoveAt(anotherElementNumber);
+                        partsOfSpeechFromTextList.RemoveAt(anotherElementNumber);
+                        amountOfEveryWords[currentElementNumber]++;
+                    }
+                }
+            }
+
+            return amountOfEveryWords;
         }
     }
 }
