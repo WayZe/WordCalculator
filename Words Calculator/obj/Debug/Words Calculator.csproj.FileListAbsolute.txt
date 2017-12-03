@@ -18,3 +18,6 @@ D:\Langs\C#\WordsCalculator\Words Calculator\obj\Debug\Words Calculator.csproj.G
 D:\Langs\C#\WordsCalculator\Words Calculator\obj\Debug\Words Calculator.csproj.CoreCompileInputs.cache
 D:\Langs\C#\WordsCalculator\Words Calculator\obj\Debug\Words Calculator.exe
 D:\Langs\C#\WordsCalculator\Words Calculator\obj\Debug\Words Calculator.pdb
+D:\Langs\C#\PPO\WordCalculator\Words Calculator\bin\Debug\Words Calculator.exe.config
+D:\Langs\C#\PPO\WordCalculator\Words Calculator\obj\Debug\Words Calculator.exe
+D:\Langs\C#\PPO\WordCalculator\Words Calculator\obj\Debug\Words Calculator.pdb
