@@ -11,7 +11,7 @@ using System.IO;
 
 public class WordCalculator
 {
-    #region Переменные
+    #region Данные
     // Части речи для слов из текста
     private static List<String> listOfSpeechPartsFromText = new List<String>();
     // Списоstatic к передложений из текста
@@ -21,7 +21,9 @@ public class WordCalculator
     // Текст файла
     private static String fileString;
     // Путь к входному файла
-    private const String inputFilePath = @"D:\Langs\C#\PPO\WordCalculator\InputFile.txt";
+    private const String inputTextFilePath = @"D:\Langs\C#\PPO\WordCalculator\InputTextFile.txt";
+    // Путь к входному файла
+    private const String inputEndFilePath = @"D:\Langs\C#\PPO\WordCalculator\InputSupportFile.txt";
     // Путь к выходному файла c ошибкой первого рода
     private const String firstKindErrorFilePath = @"D:\Langs\C#\PPO\WordCalculator\FirstKindErrorOutputFile.txt";
     // Путь к выходному файла с ошибкой второго рода
@@ -29,27 +31,16 @@ public class WordCalculator
     // Путь к выходному файла с пронумерованными предложениями
     private const String sentencesWithNumberFilePath = @"D:\Langs\C#\PPO\WordCalculator\SentencesWithNumberOutputFile.txt";
     // Массив окончаний прилагательных
-    private static String[] arrayOfAdjectiveEnds = { "ая",  "яя",  "ой",  "ей",
-                                                     "ую",  "юю",  "ый",  "ий",
-                                                     "ого", "его", "ому", "ему",
-                                                     "ым",  "им",  "ом",  "ем",
-                                                     "ое",  "ее",  "ых",  "ые"};
+    private static String[] arrayOfAdjectiveEnds;
     // Массив суффиксов прилагательных
-    private static String[] arrayOfAdjectiveSuffixes = { "ал",   "ел",   "ан",    "ян",
-                                                  "аст",  "ат",   "ев",    "ов",
-                                                  "еват", "оват", "ен",    "енн",
-                                                  "онн",  "енск", "инск",  "ив",
-                                                  "лив",  "чив",  "ин",    "ист",
-                                                  "ит",   "овит", "к",     "л",
-                                                  "н",    "шн",   "тельн", "уч",
-                                                  "юч",   "яч",   "чат" };
+    private static String[] arrayOfAdjectiveSuffixes;
     // Список найденных прилагательных с ошибкой первого рода
     private static List<String> listOfAdjectivesWithFirstTypeError = new List<String>();
-    // Списоstatic к найденных прилагательных с ошибкой второго рода
+    // Список найденных прилагательных с ошибкой второго рода
     private static List<String> listOfAdjectivesWithSecondTypeError = new List<String>();
-    // Номерstatic  предложения для соответствующего слова
+    // Номер предложения для соответствующего слова
     private static List<String> listOfSentenceNumberForWordsFromText = new List<String>();
-    // Списоstatic к количества слов
+    // Список количества слов
     private static List<int> listOfEveryWordAmount = new List<int>();
     #endregion
 
@@ -57,15 +48,37 @@ public class WordCalculator
     /// <summary>
     /// Чтение текста из файла
     /// </summary>
-    public static void readText()
+    public static void readInputTextFile()
     {
         try
         {
-            using (StreamReader streamReader = new StreamReader(inputFilePath, Encoding.GetEncoding(1251)))
+            using (StreamReader streamReader = new StreamReader(inputTextFilePath, Encoding.GetEncoding(1251)))
             {
                 fileString = streamReader.ReadToEnd();
                 fileString = fileString.ToLower();
                 Console.WriteLine(fileString);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("The file could not be read:");
+            Console.WriteLine(e.Message);
+        }
+    }
+
+    public static void readInputEndsFile()
+    {
+        try
+        {
+            using (StreamReader streamReader = new StreamReader(inputEndFilePath, Encoding.GetEncoding(1251)))
+            {
+                // Инициализация списка окончаний прилагательных
+                String tmpString = streamReader.ReadLine();
+                arrayOfAdjectiveEnds = tmpString.Split(' ');
+
+                // Инициализация списка суффиксов прилагательных
+                tmpString = streamReader.ReadLine();
+                arrayOfAdjectiveSuffixes = tmpString.Split(' ');
             }
         }
         catch (Exception e)
@@ -85,8 +98,12 @@ public class WordCalculator
         String[] sentenceArray = fileString.Split(sentenceSeparatorsArray);
 
         foreach (String sentence in sentenceArray)
+        {
             if (sentence != "")
+            {
                 listOfSentencesFromFile.Add(sentence);
+            }
+        }
     }
     #endregion
 
@@ -107,7 +124,7 @@ public class WordCalculator
     public static void divideIntoWords()
     {
         // Массив знаков-разделителей предложений
-        char[] wordSeparatorsArray = { ',', ' ', '\n'};
+        char[] wordSeparatorsArray = { ' ', ';', ',', ':', '(', ')', '\\', '\"', '\'', '\n', '\t', '\v', '\r' };
 
         for (int sentenceNumber = 0; sentenceNumber < listOfSentencesFromFile.Count; sentenceNumber++)
         {
@@ -146,7 +163,10 @@ public class WordCalculator
                 int wordLengthWithoutEnd = currentWord.Length - arrayOfAdjectiveEnds[endNumber].Length;
                 if (wordLengthWithoutEnd > 0)
                     if (currentWord.Substring(wordLengthWithoutEnd) == arrayOfAdjectiveEnds[endNumber])
+                    {
                         isAdjective = true;
+                        break;
+                    }
             }
 
             // Если currentWord - прилагательное, то добавляем его в список прилагательных
@@ -178,16 +198,20 @@ public class WordCalculator
                 {
                     for (int suffixNumber = 0; suffixNumber < arrayOfAdjectiveEnds.Length; suffixNumber++)
                     {
-                        int wordLengthWitoutEndandSuffix =
+                        int wordLengthWitoutEndAndSuffix =
                             currentWord.Length - arrayOfAdjectiveEnds[endNumber].Length
                                                - arrayOfAdjectiveSuffixes[suffixNumber].Length;
 
-                        if (wordLengthWitoutEndandSuffix > 0)
-                            if (currentWord.Substring(wordLengthWitoutEndandSuffix, 
-                                arrayOfAdjectiveSuffixes[suffixNumber].Length) 
+                        if (wordLengthWitoutEndAndSuffix > 0)
+                            if (currentWord.Substring(wordLengthWitoutEndAndSuffix,
+                                arrayOfAdjectiveSuffixes[suffixNumber].Length)
                                 == arrayOfAdjectiveSuffixes[suffixNumber])
+                            {
                                 isAdjective = true;
+                                break;
+                            }
                     }
+                    if (isAdjective) break;
                 }
 
                 // Если currentWord - прилагательное, то добавляем его в список прилагательных

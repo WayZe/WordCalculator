@@ -40,22 +40,24 @@ namespace Words_Calculator
         /// <param name="e"></param>
         private void searchButton_Click(object sender, EventArgs e)
         {
-            WordCalculator.readText();
+            WordCalculator.readInputTextFile();
+
+            WordCalculator.readInputEndsFile();
 
             WordCalculator.divideIntoSentences();
-
+            
             WordCalculator.writeFileWithSentenceNumber();
-
+            
             WordCalculator.divideIntoWords();
-
+            
             WordCalculator.findAdjectivesWithMinFirstKindError();
-
+            
             WordCalculator.findAdjectivesWithMinSecondKindError();
-
+            
             WordCalculator.countWordAmount();
-
+            
             WordCalculator.correctWordAmount();
-
+            
             WordCalculator.writeFiles();
         }
         #endregion
