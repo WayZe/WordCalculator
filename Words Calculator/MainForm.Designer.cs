@@ -64,7 +64,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(297, 67);
+            this.ClientSize = new System.Drawing.Size(297, 90);
             this.Controls.Add(this.searchLabel);
             this.Controls.Add(this.searchButton);
             this.Controls.Add(this.searchComboBox);

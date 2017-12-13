@@ -1,52 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
 
+/// <summary>
+/// Осуществляет работу с частями речи(прилагательными)
+/// </summary>
 public class WordCalculator
 {
     #region Данные
-    // Части речи для слов из текста
-    private static List<String> listOfSpeechPartsFromText = new List<String>();
-    // Списоstatic к передложений из текста
-    private static List<String> listOfSentencesFromFile = new List<String>();
-    // Списоstatic к слов из текста
-    private static List<String> listOfWordsFromFile = new List<String>();
+
     // Текст файла
     private static String fileString;
-    // Путь к входному файла
+    // Подсчёт количества всех найденных прилагательных с минимальной ошибкой первого рода
+    private static int adjectiveAmountWithFirstErrorType = 0;
+    // Подсчёт количества всех найденных прилагательных с минимальной ошибкой второго рода
+    private static int adjectiveAmountWithSecondErrorType = 0;
+
+    ///ПУТИ К ФАЙЛАМ
+    // Путь к входному файлу с текстом
     private const String inputTextFilePath = @"D:\Langs\C#\PPO\WordCalculator\InputTextFile.txt";
-    // Путь к входному файла
+    // Путь к входному вспомогательному файлу
     private const String inputEndFilePath = @"D:\Langs\C#\PPO\WordCalculator\InputSupportFile.txt";
-    // Путь к выходному файла c ошибкой первого рода
-    private const String firstKindErrorFilePath = @"D:\Langs\C#\PPO\WordCalculator\FirstKindErrorOutputFile.txt";
-    // Путь к выходному файла с ошибкой второго рода
+    // Путь к выходному файлу c ошибкой второго рода
     private const String secondKindErrorFilePath = @"D:\Langs\C#\PPO\WordCalculator\SecondKindErrorOutputFile.txt";
-    // Путь к выходному файла с пронумерованными предложениями
+    // Путь к выходному файлу с ошибкой первого рода
+    private const String firstKindErrorFilePath = @"D:\Langs\C#\PPO\WordCalculator\FirstKindErrorOutputFile.txt";
+    // Путь к выходному файлу с пронумерованными предложениями
     private const String sentencesWithNumberFilePath = @"D:\Langs\C#\PPO\WordCalculator\SentencesWithNumberOutputFile.txt";
+    
+    ///РАЗДЕЛИТЕЛИ
+    // Разделитель в вспомогательном файле
+    private const char supportSeparator = ' ';
+    // Разделитель для номеров предложений
+    private const char sentenceNumberSeparator = ',';
+    // Массив знаков-разделителей для предложений
+    private static readonly char[] sentenceSeparatorsArray = { '!', '?', '.' };
+    // Массив знаков-разделителей на слова
+    private static char[] wordSeparatorsArray = { ' ',  ';',  ',',  ':',
+                                                  '(',  ')',  '\\', '\"',
+                                                  '\'', '\n', '\t', '\v', '\r' };
+
+    ///ОСНОВНЫЕ СПИСКИ
+    // Части речи для слов из текста
+    private static List<String> listOfSpeechParts = new List<String>();
+    // Список слов из текста
+    private static List<String> listOfWords = new List<String>();
+    // Номер предложения для соответствующего слова
+    private static List<String> listOfSentenceNumbers = new List<String>();
+    // Список количества слов
+    private static List<int> listOfWordAmount = new List<int>();
+
+    ///ВСПОМОГАТЕЛЬНЫЕ СПИСКИ
+    // Список найденных прилагательных с ошибкой первого рода
+    private static List<String> listOfAdjectivesWithFirstTypeError = new List<String>();
+    // Список передложений из текста
+    private static List<String> listOfSentences = new List<String>();
+
+    ///ВСПОМОГАТЕЛЬНЫЕ МАССИВЫ
     // Массив окончаний прилагательных
     private static String[] arrayOfAdjectiveEnds;
     // Массив суффиксов прилагательных
     private static String[] arrayOfAdjectiveSuffixes;
-    // Список найденных прилагательных с ошибкой первого рода
-    private static List<String> listOfAdjectivesWithFirstTypeError = new List<String>();
-    // Список найденных прилагательных с ошибкой второго рода
-    private static List<String> listOfAdjectivesWithSecondTypeError = new List<String>();
-    // Номер предложения для соответствующего слова
-    private static List<String> listOfSentenceNumberForWordsFromText = new List<String>();
-    // Список количества слов
-    private static List<int> listOfEveryWordAmount = new List<int>();
     #endregion
 
-    #region Чтение из файла
+    #region Чтение из файла с текстом
     /// <summary>
-    /// Чтение текста из файла
+    /// Чтение текста из файла в строку
     /// </summary>
     public static void readInputTextFile()
     {
@@ -55,7 +76,6 @@ public class WordCalculator
             using (StreamReader streamReader = new StreamReader(inputTextFilePath, Encoding.GetEncoding(1251)))
             {
                 fileString = streamReader.ReadToEnd();
-                fileString = fileString.ToLower();
                 Console.WriteLine(fileString);
             }
         }
@@ -65,7 +85,9 @@ public class WordCalculator
             Console.WriteLine(e.Message);
         }
     }
+    #endregion
 
+    #region Чтение из вспомогательного файла
     public static void readInputEndsFile()
     {
         try
@@ -74,11 +96,11 @@ public class WordCalculator
             {
                 // Инициализация списка окончаний прилагательных
                 String tmpString = streamReader.ReadLine();
-                arrayOfAdjectiveEnds = tmpString.Split(' ');
+                arrayOfAdjectiveEnds = tmpString.Split(supportSeparator);
 
                 // Инициализация списка суффиксов прилагательных
                 tmpString = streamReader.ReadLine();
-                arrayOfAdjectiveSuffixes = tmpString.Split(' ');
+                arrayOfAdjectiveSuffixes = tmpString.Split(supportSeparator);
             }
         }
         catch (Exception e)
@@ -92,68 +114,77 @@ public class WordCalculator
     #region Деление строки на предложения
     public static void divideIntoSentences()
     {
-        // Массив знаков-разделителей предложений
-        char[] sentenceSeparatorsArray = { '!', '?', '.' };
-
         String[] sentenceArray = fileString.Split(sentenceSeparatorsArray);
 
         foreach (String sentence in sentenceArray)
         {
             if (sentence != "")
             {
-                listOfSentencesFromFile.Add(sentence);
+                listOfSentences.Add(sentence);
             }
         }
     }
     #endregion
 
-    #region Запись данных в файл
+    #region Нумерация предложений и запись пронумерованных предложений в файл
     public static void writeFileWithSentenceNumber()
     {
         using (StreamWriter outputFile = new StreamWriter(sentencesWithNumberFilePath))
         {
-            for (int elementNumber = 0; elementNumber < listOfSentencesFromFile.Count; elementNumber++)
+            for (int sentenceNumber = 0; sentenceNumber < listOfSentences.Count; sentenceNumber++)
             {
-                outputFile.WriteLine(elementNumber + 1 + ". " + listOfSentencesFromFile[elementNumber]);
+                outputFile.WriteLine(sentenceNumber + 1 + ". " + listOfSentences[sentenceNumber]);
             }
         }
     }
     #endregion
 
     #region Деление предложений на слова
+    /// <summary>
+    /// Деление текста на предложение по массиву знаков-разделителей
+    /// Слова заносятся в список слов
+    /// Номер предложения, из которого взято слова, 
+    /// заносится по соответствующему  индесу в список номеров предложений
+    /// Список количества слов заполняется единицами
+    /// </summary>
     public static void divideIntoWords()
     {
-        // Массив знаков-разделителей предложений
-        char[] wordSeparatorsArray = { ' ', ';', ',', ':', '(', ')', '\\', '\"', '\'', '\n', '\t', '\v', '\r' };
-
-        for (int sentenceNumber = 0; sentenceNumber < listOfSentencesFromFile.Count; sentenceNumber++)
+        for (int sentenceNumber = 0; sentenceNumber < listOfSentences.Count; sentenceNumber++)
         {
-            String[] wordArray = listOfSentencesFromFile[sentenceNumber].Split(wordSeparatorsArray);
+            String[] wordArray = listOfSentences[sentenceNumber].Split(wordSeparatorsArray);
 
             foreach (String word in wordArray)
             {
                 if (word != "")
                 {
-                    listOfWordsFromFile.Add(word);
-                    listOfSentenceNumberForWordsFromText.Add((sentenceNumber + 1).ToString());
-                    listOfEveryWordAmount.Add(1);
+                    String lowerWord = word.ToLower();
+                    listOfWords.Add(lowerWord);
+                    listOfSentenceNumbers.Add((sentenceNumber + 1).ToString());
+                    listOfWordAmount.Add(1);
                 }
             }
         }
     }
     #endregion
 
-    #region Поиск прилагательных с минимальной ошибкой первого рода
+    #region Поиск прилагательных с минимальной ошибкой второго рода
     /// <summary>
-    /// Поиск прилагательных с минимальной ошибкой первого рода
+    /// Минимальной ошибкой второго рода будем называть ситуацию, 
+    /// когда найдено максимально возможное количество прилагательных из текста.
+    /// Это объясняется тем, что прилагательные имеют конечное количество окончаний, и, 
+    /// осуществляя поиск по этим окончаниям, мы можем сказать, что нашли все прилагательные из текста.
+    /// Для слова определенного как прилагательное в список частей речи 
+    /// по соответствующему индексу заносится слово "Прилагательное"
     /// </summary>
     public static void findAdjectivesWithMinFirstKindError()
     {
-        for (int elementNumber = 0; elementNumber < listOfWordsFromFile.Count; elementNumber++)
-            listOfSpeechPartsFromText.Add("");
-        for (int elementNumber = 0; elementNumber < listOfWordsFromFile.Count; elementNumber++)
+        // Инициализация списка частей речи пустыми строками
+        for (int elementNumber = 0; elementNumber < listOfWords.Count; elementNumber++)
+            listOfSpeechParts.Add("");
+
+        for (int elementNumber = 0; elementNumber < listOfWords.Count; elementNumber++)
         {
-            String currentWord = listOfWordsFromFile.ElementAt(elementNumber);
+            String currentWord = listOfWords.ElementAt(elementNumber);
 
             bool isAdjective = false;
 
@@ -172,24 +203,29 @@ public class WordCalculator
             // Если currentWord - прилагательное, то добавляем его в список прилагательных
             if (isAdjective)
             {
-                Console.WriteLine(elementNumber);
-                listOfSpeechPartsFromText[elementNumber] = "Прилагательное";
+                listOfSpeechParts[elementNumber] = "Прилагательное";
             }
         }
     }
     #endregion
 
-    #region Поиск прилагательных с минимальной ошибкой второго рода
-    /// <summary>
-    /// Поиск прилагательных с минимальной ошибкой второго рода
+    #region Поиск прилагательных с минимальной ошибкой первого рода
+    /// <summary> 
+    /// Минимальной ошибкой первого рода будем называть ситуацию, 
+    /// когда найдено минимальное количество слов, не являющихся прилагательными.
+    /// Поиск прилагательных осуществляется сначала сравнением окончаний прилагательных 
+    /// с элементами массива окончаний прилагательных, 
+    /// после сравнением суффиксов с элементами массива суффиксов прилагательных
+    /// Для слова определенного как прилагательное в список частей речи 
+    /// по соответствующему индексу заносится слово "Прилагательное"
     /// </summary>
     public static void findAdjectivesWithMinSecondKindError()
     {
-        for (int elementNumber = 0; elementNumber < listOfWordsFromFile.Count; elementNumber++)
+        for (int elementNumber = 0; elementNumber < listOfWords.Count; elementNumber++)
         {
-            if (listOfSpeechPartsFromText[elementNumber] == "Прилагательное")
+            if (listOfSpeechParts[elementNumber] == "Прилагательное")
             {
-                String currentWord = listOfWordsFromFile.ElementAt(elementNumber);
+                String currentWord = listOfWords.ElementAt(elementNumber);
 
                 bool isAdjective = false;
 
@@ -217,8 +253,7 @@ public class WordCalculator
                 // Если currentWord - прилагательное, то добавляем его в список прилагательных
                 if (isAdjective)
                 {
-                    Console.WriteLine(elementNumber);
-                    listOfAdjectivesWithSecondTypeError.Add(currentWord);
+                    listOfAdjectivesWithFirstTypeError.Add(currentWord);
                 }
             }
         }
@@ -226,22 +261,33 @@ public class WordCalculator
     #endregion
 
     #region Подсчёт количества слов
+    /// <summary>
+    /// Сравниваются два слова первое с индексом currentNumber, второе - anotherNumber
+    /// Если они посимвольно равны, то элемент с индексом anotherNumber удаляется из 
+    /// списков слов, частей речи, количества слов, номеров предложений
+    /// В массиве количества слов элемент по индексу currentNumber увеличивается на 1
+    /// А к элементу массива номеров предложений по индексу currentNumber 
+    /// добавляется строка из этого же массива, которая была по индексу anotherNumber
+    /// Пример для массива номеров предложений: было "1", стало "1,2"
+    /// в случае если одинаковые слова находились в первом и втором передложениях
+    /// </summary>
     public static void countWordAmount()
     {
-        for (int currentElementNumber = 0; currentElementNumber < listOfWordsFromFile.Count; currentElementNumber++)
+        for (int currentNumber = 0; currentNumber < listOfWords.Count; currentNumber++)
         {
-            for (int anotherElementNumber = currentElementNumber + 1; anotherElementNumber < listOfWordsFromFile.Count; anotherElementNumber++)
+            for (int anotherNumber = currentNumber + 1; anotherNumber < listOfWords.Count; anotherNumber++)
             {
-                if (listOfWordsFromFile.ElementAt(currentElementNumber) == listOfWordsFromFile.ElementAt(anotherElementNumber))
+                if (listOfWords.ElementAt(currentNumber) == listOfWords.ElementAt(anotherNumber))
                 {
-                    listOfWordsFromFile.RemoveAt(anotherElementNumber);
-                    listOfSpeechPartsFromText.RemoveAt(anotherElementNumber);
-                    listOfEveryWordAmount[currentElementNumber]++;
-                    listOfSentenceNumberForWordsFromText[currentElementNumber] =
-                        listOfSentenceNumberForWordsFromText[currentElementNumber] + "," +
-                        listOfSentenceNumberForWordsFromText[anotherElementNumber];
-                    listOfSentenceNumberForWordsFromText.RemoveAt(anotherElementNumber);
-                    anotherElementNumber--;
+                    listOfWords.RemoveAt(anotherNumber);
+                    listOfSpeechParts.RemoveAt(anotherNumber);
+                    listOfWordAmount.RemoveAt(anotherNumber);
+                    listOfWordAmount[currentNumber]++;
+                    listOfSentenceNumbers[currentNumber] =
+                        listOfSentenceNumbers[currentNumber] + "," +
+                        listOfSentenceNumbers[anotherNumber];
+                    listOfSentenceNumbers.RemoveAt(anotherNumber);
+                    anotherNumber--;
                 }
             }
         }
@@ -249,77 +295,151 @@ public class WordCalculator
     #endregion
 
     #region Корректировка номеров предложений для каждого слова
+    /// <summary>
+    /// Корректировка номеров предложений
+    /// Пример: было "1,1,1,2,2,3", стало "1,2,3"
+    /// </summary>
     public static void correctWordAmount()
     {
-        for (int wordNumber = 0; wordNumber < listOfSentenceNumberForWordsFromText.Count; wordNumber++)
+        // Берём слово из списка слов
+        for (int wordNumber = 0; wordNumber < listOfSentenceNumbers.Count; wordNumber++)
         {
-            String[] arrayOfSentenceNumbersForWord = listOfSentenceNumberForWordsFromText[wordNumber].Split(',');
+            // Делим номера предложений для этого слова по запятым в массив
+            // Пример: было "1,2,3", стало "1","2","3"
+            String[] arrayOfSentenceNumbersForWord = listOfSentenceNumbers[wordNumber].Split(sentenceNumberSeparator);
 
+            // Копируем массив в список
             List<String> listOfSentenceNumbersForWord = new List <String>();
-
             for (int elementNumber = 0; elementNumber < arrayOfSentenceNumbersForWord.Length; elementNumber++)
             {
                 listOfSentenceNumbersForWord.Add(arrayOfSentenceNumbersForWord[elementNumber]);
             }
 
-            for (int currentElementNumber = 0; currentElementNumber < listOfSentenceNumbersForWord.Count; currentElementNumber++)
+            // Удаляем одинаковые номера предложений
+            for (int currentNumber = 0; currentNumber < listOfSentenceNumbersForWord.Count; currentNumber++)
             {
-                for (int anotherElementNumber = currentElementNumber + 1; anotherElementNumber < listOfSentenceNumbersForWord.Count; anotherElementNumber++)
+                for (int anotherNumber = currentNumber + 1; anotherNumber < listOfSentenceNumbersForWord.Count; anotherNumber++)
                 {
-                    if (listOfSentenceNumbersForWord[currentElementNumber] == listOfSentenceNumbersForWord[anotherElementNumber])
+                    if (listOfSentenceNumbersForWord[currentNumber] == listOfSentenceNumbersForWord[anotherNumber])
                     {
-                        listOfSentenceNumbersForWord.RemoveAt(anotherElementNumber);
-                        anotherElementNumber--;
+                        listOfSentenceNumbersForWord.RemoveAt(anotherNumber);
+                        anotherNumber--;
                     }
                 }
             }
 
-            listOfSentenceNumberForWordsFromText[wordNumber] = listOfSentenceNumbersForWord[0];
+            // Заменяем текущее значение элемента списка номеров предложений на скорректированное
+            listOfSentenceNumbers[wordNumber] = listOfSentenceNumbersForWord[0];
             for (int elementNumber = 1; elementNumber < listOfSentenceNumbersForWord.Count; elementNumber++)
             {
-                listOfSentenceNumberForWordsFromText[wordNumber] +=
+                listOfSentenceNumbers[wordNumber] +=
                     "," + listOfSentenceNumbersForWord[elementNumber];
             }
         }
     }
     #endregion
 
-    #region Запись данных в файл
-    public static void writeFiles()
+    public static void countAllFoundWords()
     {
-        using (StreamWriter outputFile = new StreamWriter(firstKindErrorFilePath))
+        for (int wordIndex = 0; wordIndex < listOfWordAmount.Count; wordIndex++)
         {
-            outputFile.WriteLine("{0,-20} {1,5:N0} {2,5:N0}", "Слово", "Количество", "Номера предложений");
-            outputFile.WriteLine("      ПРИЛАГАТЕЛЬНЫЕ");
-            for (int elementNumber = 0; elementNumber < listOfSpeechPartsFromText.Count; elementNumber++)
-            {
-                if (listOfSpeechPartsFromText[elementNumber] == "Прилагательное")
-                {
-                    outputFile.WriteLine("{0,-20} {1,5:N0}             {2,-1:N0}",
-                        listOfWordsFromFile[elementNumber],
-                        listOfEveryWordAmount[elementNumber],
-                        listOfSentenceNumberForWordsFromText[elementNumber]);
-                }
-            }
+            adjectiveAmountWithFirstErrorType += listOfWordAmount[wordIndex];
         }
+    }
 
-        using (StreamWriter outputFile = new StreamWriter(secondKindErrorFilePath))
+    #region Сортировка
+    /// <summary>
+    /// Сортировка пузырьком по возрастанию
+    /// Сортируются 
+    /// </summary>
+    public static void sortOfWords()
+    {
+        for (int currentIndex = 0; currentIndex < listOfWordAmount.Count; currentIndex++)
         {
-            outputFile.WriteLine("{0,-20} {1,5:N0} {2,5:N0}", "Слово", "Количество", "Номера предложений");
-            outputFile.WriteLine("      ПРИЛАГАТЕЛЬНЫЕ");
-            for (int listOfAdjectivesWithSecondTypeErrorElement = 0; listOfAdjectivesWithSecondTypeErrorElement < listOfAdjectivesWithSecondTypeError.Count; listOfAdjectivesWithSecondTypeErrorElement++)
+            for (int anotherIndex = 0; anotherIndex < listOfWordAmount.Count - currentIndex - 1; anotherIndex++)
             {
-                for (int listOfWordsFromFileElement = 0; listOfWordsFromFileElement < listOfWordsFromFile.Count; listOfWordsFromFileElement++)
+                if (listOfWordAmount[anotherIndex] > listOfWordAmount[anotherIndex + 1])
                 {
-                    if (listOfAdjectivesWithSecondTypeError[listOfAdjectivesWithSecondTypeErrorElement]
-                        == listOfWordsFromFile[listOfWordsFromFileElement])
-                        outputFile.WriteLine("{0,-20} {1,5:N0}             {2,-1:N0}",
-                            listOfWordsFromFile[listOfWordsFromFileElement],
-                            listOfEveryWordAmount[listOfWordsFromFileElement],
-                            listOfSentenceNumberForWordsFromText[listOfWordsFromFileElement]);
+                    int tmp = listOfWordAmount[anotherIndex];
+                    listOfWordAmount[anotherIndex] = listOfWordAmount[anotherIndex + 1];
+                    listOfWordAmount[anotherIndex + 1] = tmp;
+
+                    String tmpString = listOfWords[anotherIndex];
+                    listOfWords[anotherIndex] = listOfWords[anotherIndex + 1];
+                    listOfWords[anotherIndex + 1] = tmpString;
+
+                    tmpString = listOfSentenceNumbers[anotherIndex];
+                    listOfSentenceNumbers[anotherIndex] = listOfSentenceNumbers[anotherIndex + 1];
+                    listOfSentenceNumbers[anotherIndex + 1] = tmpString;
+
+                    tmpString = listOfSpeechParts[anotherIndex];
+                    listOfSpeechParts[anotherIndex] = listOfSpeechParts[anotherIndex + 1];
+                    listOfSpeechParts[anotherIndex + 1] = tmpString;
                 }
             }
         }
     }
     #endregion
+
+    #region Форматированная запись данных в файлы
+    /// <summary>
+    /// Запись осуществляется с помощью прохода по массиву частей речи,
+    /// в нём находятся элементы "Прилагательное"
+    /// и по их индексу выводятся элементы из массива слов
+    /// </summary>
+    public static void writeInFiles()
+    {
+        // Запись в файл с ошибкой второго рода
+        using (StreamWriter outputFile = new StreamWriter(secondKindErrorFilePath))
+        {
+            outputFile.WriteLine("{0,-30} {1,5:N0}        {2,5:N0}", "Слово", "Количество", "Номера предложений");
+            outputFile.WriteLine("      ПРИЛАГАТЕЛЬНЫЕ");
+            for (int elementNumber = 0; elementNumber < listOfSpeechParts.Count; elementNumber++)
+            {
+                if (listOfSpeechParts[elementNumber] == "Прилагательное")
+                {
+                    outputFile.WriteLine("{0,-30} {1,5:N0}             {2,-1:N0}",
+                        listOfWords[elementNumber],
+                        listOfWordAmount[elementNumber],
+                        listOfSentenceNumbers[elementNumber]);
+                }
+            }
+
+            outputFile.WriteLine("Количество всех найденных прилагательных: " + adjectiveAmountWithSecondErrorType);
+        }
+
+        // Запись в файл с ошибкой первого рода
+        using (StreamWriter outputFile = new StreamWriter(firstKindErrorFilePath))
+        {
+            outputFile.WriteLine("{0,-30} {1,5:N0}        {2,5:N0}", "Слово", "Количество", "Номера предложений");
+            outputFile.WriteLine("      ПРИЛАГАТЕЛЬНЫЕ");
+            for (int listOfAdjectivesWithFirstTypeErrorElement = 0; listOfAdjectivesWithFirstTypeErrorElement < listOfAdjectivesWithFirstTypeError.Count; listOfAdjectivesWithFirstTypeErrorElement++)
+            {
+                for (int listOfWordsFromFileElement = 0; listOfWordsFromFileElement < listOfWords.Count; listOfWordsFromFileElement++)
+                {
+                    if (listOfAdjectivesWithFirstTypeError[listOfAdjectivesWithFirstTypeErrorElement]
+                        == listOfWords[listOfWordsFromFileElement])
+                        outputFile.WriteLine("{0,-30} {1,5:N0}             {2,-10:N0}",
+                            listOfWords[listOfWordsFromFileElement],
+                            listOfWordAmount[listOfWordsFromFileElement],
+                            listOfSentenceNumbers[listOfWordsFromFileElement]);
+                }
+            }
+
+            outputFile.WriteLine("Количество всех найденных прилагательных: " + adjectiveAmountWithFirstErrorType);
+        }
+    }
+    #endregion
+
+    public static void clearData()
+    {
+        listOfWordAmount.RemoveRange(0, listOfWordAmount.Count);
+        listOfSpeechParts.RemoveRange(0, listOfSpeechParts.Count);
+        listOfWords.RemoveRange(0, listOfWords.Count);
+        listOfSentenceNumbers.RemoveRange(0, listOfSentenceNumbers.Count);
+        listOfSentences.RemoveRange(0, listOfSentences.Count);
+        listOfAdjectivesWithFirstTypeError.RemoveRange(0, listOfAdjectivesWithFirstTypeError.Count);
+        adjectiveAmountWithFirstErrorType = 0;
+        adjectiveAmountWithSecondErrorType = 0;
+    }
 }

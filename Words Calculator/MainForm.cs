@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
 
+/// <summary>
+/// Осуществляет работу с событиями
+/// </summary>
 namespace Words_Calculator
 {
     public partial class mainForm : Form
@@ -57,8 +52,12 @@ namespace Words_Calculator
             WordCalculator.countWordAmount();
             
             WordCalculator.correctWordAmount();
+
+            WordCalculator.sortOfWords();
             
-            WordCalculator.writeFiles();
+            WordCalculator.writeInFiles();
+
+            WordCalculator.clearLists();
         }
         #endregion
 
