@@ -53,11 +53,13 @@ namespace Words_Calculator
             
             WordCalculator.correctWordAmount();
 
+            WordCalculator.countAllFoundWords();
+
             WordCalculator.sortOfWords();
             
             WordCalculator.writeInFiles();
 
-            WordCalculator.clearLists();
+            WordCalculator.clearData();
         }
         #endregion
 

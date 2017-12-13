@@ -13,10 +13,6 @@ public class WordCalculator
 
     // Текст файла
     private static String fileString;
-    // Подсчёт количества всех найденных прилагательных с минимальной ошибкой первого рода
-    private static int adjectiveAmountWithFirstErrorType = 0;
-    // Подсчёт количества всех найденных прилагательных с минимальной ошибкой второго рода
-    private static int adjectiveAmountWithSecondErrorType = 0;
 
     ///ПУТИ К ФАЙЛАМ
     // Путь к входному файлу с текстом
@@ -339,18 +335,11 @@ public class WordCalculator
     }
     #endregion
 
-    public static void countAllFoundWords()
-    {
-        for (int wordIndex = 0; wordIndex < listOfWordAmount.Count; wordIndex++)
-        {
-            adjectiveAmountWithFirstErrorType += listOfWordAmount[wordIndex];
-        }
-    }
-
     #region Сортировка
     /// <summary>
     /// Сортировка пузырьком по возрастанию
-    /// Сортируются 
+    /// Сортируется список количества слов, 
+    /// в соответствии с ним соортируются и остальные основные списки
     /// </summary>
     public static void sortOfWords()
     {
@@ -389,7 +378,7 @@ public class WordCalculator
     /// </summary>
     public static void writeInFiles()
     {
-        // Запись в файл с ошибкой второго рода
+        // Запись в файл с минимальной ошибкой второго рода
         using (StreamWriter outputFile = new StreamWriter(secondKindErrorFilePath))
         {
             outputFile.WriteLine("{0,-30} {1,5:N0}        {2,5:N0}", "Слово", "Количество", "Номера предложений");
@@ -404,11 +393,9 @@ public class WordCalculator
                         listOfSentenceNumbers[elementNumber]);
                 }
             }
-
-            outputFile.WriteLine("Количество всех найденных прилагательных: " + adjectiveAmountWithSecondErrorType);
         }
 
-        // Запись в файл с ошибкой первого рода
+        // Запись в файл с минимальной ошибкой первого рода
         using (StreamWriter outputFile = new StreamWriter(firstKindErrorFilePath))
         {
             outputFile.WriteLine("{0,-30} {1,5:N0}        {2,5:N0}", "Слово", "Количество", "Номера предложений");
@@ -425,12 +412,11 @@ public class WordCalculator
                             listOfSentenceNumbers[listOfWordsFromFileElement]);
                 }
             }
-
-            outputFile.WriteLine("Количество всех найденных прилагательных: " + adjectiveAmountWithFirstErrorType);
         }
     }
     #endregion
 
+    #region Обнуление исходных данных
     public static void clearData()
     {
         listOfWordAmount.RemoveRange(0, listOfWordAmount.Count);
@@ -439,7 +425,6 @@ public class WordCalculator
         listOfSentenceNumbers.RemoveRange(0, listOfSentenceNumbers.Count);
         listOfSentences.RemoveRange(0, listOfSentences.Count);
         listOfAdjectivesWithFirstTypeError.RemoveRange(0, listOfAdjectivesWithFirstTypeError.Count);
-        adjectiveAmountWithFirstErrorType = 0;
-        adjectiveAmountWithSecondErrorType = 0;
     }
+    #endregion
 }
