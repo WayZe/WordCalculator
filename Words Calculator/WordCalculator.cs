@@ -51,7 +51,7 @@ public class WordCalculator
     ///ВСПОМОГАТЕЛЬНЫЕ СПИСКИ
     // Список найденных прилагательных с ошибкой первого рода
     private static List<String> listOfAdjectivesWithFirstTypeError = new List<String>();
-    // Список передложений из текста
+    // Список предложений из текста
     private static List<String> listOfSentences = new List<String>();
 
     ///ВСПОМОГАТЕЛЬНЫЕ МАССИВЫ
@@ -137,10 +137,10 @@ public class WordCalculator
 
     #region Деление предложений на слова
     /// <summary>
-    /// Деление текста на предложение по массиву знаков-разделителей
+    /// Деление текста на предложения по массиву знаков-разделителей
     /// Слова заносятся в список слов
     /// Номер предложения, из которого взято слова, 
-    /// заносится по соответствующему  индесу в список номеров предложений
+    /// заносится по соответствующему  индексу в список номеров предложений
     /// Список количества слов заполняется единицами
     /// </summary>
     public static void divideIntoWords()
@@ -400,16 +400,19 @@ public class WordCalculator
         {
             outputFile.WriteLine("{0,-30} {1,5:N0}        {2,5:N0}", "Слово", "Количество", "Номера предложений");
             outputFile.WriteLine("      ПРИЛАГАТЕЛЬНЫЕ");
-            for (int listOfAdjectivesWithFirstTypeErrorElement = 0; listOfAdjectivesWithFirstTypeErrorElement < listOfAdjectivesWithFirstTypeError.Count; listOfAdjectivesWithFirstTypeErrorElement++)
+            for (int listOfWordsFromFileElement = 0; listOfWordsFromFileElement < listOfWords.Count; listOfWordsFromFileElement++)
             {
-                for (int listOfWordsFromFileElement = 0; listOfWordsFromFileElement < listOfWords.Count; listOfWordsFromFileElement++)
+                for (int listOfAdjectivesWithFirstTypeErrorElement = 0; listOfAdjectivesWithFirstTypeErrorElement < listOfAdjectivesWithFirstTypeError.Count; listOfAdjectivesWithFirstTypeErrorElement++)
                 {
                     if (listOfAdjectivesWithFirstTypeError[listOfAdjectivesWithFirstTypeErrorElement]
                         == listOfWords[listOfWordsFromFileElement])
+                    {
                         outputFile.WriteLine("{0,-30} {1,5:N0}             {2,-10:N0}",
                             listOfWords[listOfWordsFromFileElement],
                             listOfWordAmount[listOfWordsFromFileElement],
                             listOfSentenceNumbers[listOfWordsFromFileElement]);
+                        break;
+                    }
                 }
             }
         }
