@@ -23,9 +23,6 @@ namespace Words_Calculator
         /// <param name="e"></param>
         private void mainForm_Load(object sender, EventArgs e)
         {
-            searchComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            searchComboBox.Items.Add("Прилагательные");
-            searchComboBox.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -59,8 +56,17 @@ namespace Words_Calculator
 
             WordCalculator.clearData();
         }
+
         #endregion
 
-        
+        private void chbAll_CheckedChanged(object sender, EventArgs e)
+        {
+                chbNoun.Checked = chbAll.Checked;
+                chbAdjective.Checked = chbAll.Checked;
+                chbVerb.Checked = chbAll.Checked;
+                chbAdverb.Checked = chbAll.Checked;
+                chbParticiple.Checked = chbAll.Checked;
+                chbDeeprichastie.Checked = chbAll.Checked;
+        }
     }
 }

@@ -18,7 +18,7 @@ public class WordCalculator
     // Путь к входному файлу с текстом
     private const String inputTextFilePath = @"D:\Langs\C#\PPO\WordCalculator\InputTextFile.txt";
     // Путь к входному вспомогательному файлу
-    private const String inputEndFilePath = @"D:\Langs\C#\PPO\WordCalculator\InputSupportFile.txt";
+    private const String inputSupportFilePath = @"D:\Langs\C#\PPO\WordCalculator\InputSupportFile.txt";
     // Путь к выходному файлу c ошибкой второго рода
     private const String secondKindErrorFilePath = @"D:\Langs\C#\PPO\WordCalculator\SecondKindErrorOutputFile.txt";
     // Путь к выходному файлу с ошибкой первого рода
@@ -88,7 +88,7 @@ public class WordCalculator
     {
         try
         {
-            using (StreamReader streamReader = new StreamReader(inputEndFilePath, Encoding.GetEncoding(1251)))
+            using (StreamReader streamReader = new StreamReader(inputSupportFilePath, Encoding.GetEncoding(1251)))
             {
                 // Инициализация списка окончаний прилагательных
                 String tmpString = streamReader.ReadLine();
