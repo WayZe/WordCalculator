@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Windows.Forms;
 
 /// <summary>
 /// Осуществляет работу с частями речи(прилагательными)
@@ -16,7 +17,7 @@ public class WordCalculator
 
     ///ПУТИ К ФАЙЛАМ
     // Путь к входному файлу с текстом
-    private const String inputTextFilePath = @"D:\Langs\C#\PPO\WordCalculator\InputTextFile.txt";
+    private static String inputTextFilePath = @"";
     // Путь к входному вспомогательному файлу
     private const String inputSupportFilePath = @"D:\Langs\C#\PPO\WordCalculator\InputSupportFile.txt";
     // Путь к выходному файлу c ошибкой второго рода
@@ -59,6 +60,27 @@ public class WordCalculator
     private static String[] arrayOfAdjectiveEnds;
     // Массив суффиксов прилагательных
     private static String[] arrayOfAdjectiveSuffixes;
+
+
+    // Наличие открытого файла
+    private static bool isOpenFile = false;
+    public static bool IsOpenFile
+    {
+        get
+        {
+            if (inputTextFilePath != "")
+            {
+                isOpenFile = true;
+            }
+            else
+            {
+                isOpenFile = false;
+            }
+
+            return isOpenFile;
+        }
+    }
+
     #endregion
 
     #region Чтение из файла с текстом
@@ -67,18 +89,24 @@ public class WordCalculator
     /// </summary>
     public static void readInputTextFile()
     {
-        try
+
+        OpenFileDialog openFileDialog = new OpenFileDialog();
+
+
+        openFileDialog.InitialDirectory = @"D:\Langs\C#\WordsCalculator\WordCalculator";
+        openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+        openFileDialog.FilterIndex = 0;
+        openFileDialog.RestoreDirectory = true;
+
+        if (openFileDialog.ShowDialog() == DialogResult.OK)
         {
-            using (StreamReader streamReader = new StreamReader(inputTextFilePath, Encoding.GetEncoding(1251)))
-            {
-                fileString = streamReader.ReadToEnd();
-                Console.WriteLine(fileString);
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("The file could not be read:");
-            Console.WriteLine(e.Message);
+                inputTextFilePath = openFileDialog.FileName;
+                StreamReader streamReader = new StreamReader(File.OpenRead(inputTextFilePath));
+                using (streamReader)
+                {
+                    fileString = streamReader.ReadToEnd();
+                    Console.WriteLine(fileString);
+                }
         }
     }
     #endregion

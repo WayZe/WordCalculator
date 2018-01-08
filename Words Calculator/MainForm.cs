@@ -9,8 +9,6 @@ namespace Words_Calculator
     public partial class mainForm : Form
     {
         
-
-        #region Actions
         public mainForm()
         {
             InitializeComponent();
@@ -23,6 +21,9 @@ namespace Words_Calculator
         /// <param name="e"></param>
         private void mainForm_Load(object sender, EventArgs e)
         {
+            grbPartsOfSpeech.Enabled = WordCalculator.IsOpenFile;
+            grbOutputOptions.Enabled = WordCalculator.IsOpenFile;
+            btnSearch.Enabled = WordCalculator.IsOpenFile;
         }
 
         /// <summary>
@@ -32,8 +33,6 @@ namespace Words_Calculator
         /// <param name="e"></param>
         private void searchButton_Click(object sender, EventArgs e)
         {
-            WordCalculator.readInputTextFile();
-
             WordCalculator.readInputEndsFile();
 
             WordCalculator.divideIntoSentences();
@@ -57,8 +56,6 @@ namespace Words_Calculator
             WordCalculator.clearData();
         }
 
-        #endregion
-
         private void chbAll_CheckedChanged(object sender, EventArgs e)
         {
                 chbNoun.Checked = chbAll.Checked;
@@ -67,6 +64,14 @@ namespace Words_Calculator
                 chbAdverb.Checked = chbAll.Checked;
                 chbParticiple.Checked = chbAll.Checked;
                 chbDeeprichastie.Checked = chbAll.Checked;
+        }
+
+        private void btnChoose_Click(object sender, EventArgs e)
+        {
+            WordCalculator.readInputTextFile();
+            grbPartsOfSpeech.Enabled = WordCalculator.IsOpenFile;
+            grbOutputOptions.Enabled = WordCalculator.IsOpenFile;
+            btnSearch.Enabled = WordCalculator.IsOpenFile;
         }
     }
 }
