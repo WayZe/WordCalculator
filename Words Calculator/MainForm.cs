@@ -22,17 +22,17 @@ namespace Words_Calculator
         private void mainForm_Load(object sender, EventArgs e)
         {
             grbPartsOfSpeech.Enabled = WordCalculator.IsOpenFile;
-            grbOutputOptions.Enabled = WordCalculator.IsOpenFile;
             btnSearch.Enabled = WordCalculator.IsOpenFile;
         }
 
         /// <summary>
-        /// Нажатие кнопки "Искать"
+        /// Нажатие кнопки "Анализ"
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void searchButton_Click(object sender, EventArgs e)
+        private void btnSearch_Click(object sender, EventArgs e)
         {
+            Console.Write("fgjkl");
             WordCalculator.readInputEndsFile();
 
             WordCalculator.divideIntoSentences();
@@ -41,10 +41,14 @@ namespace Words_Calculator
             
             WordCalculator.divideIntoWords();
             
-            WordCalculator.findAdjectivesWithMinFirstKindError();
-            
-            WordCalculator.findAdjectivesWithMinSecondKindError();
-            
+            if (chbAdjective.Checked == chbAll.Checked)
+                WordCalculator.findAdjectivesWithMinFirstKindError();
+
+            //WordCalculator.findAdjectivesWithMinSecondKindError();
+
+            if (chbAdverb.Checked == chbAll.Checked)
+                WordCalculator.findAdverb();
+
             WordCalculator.countWordAmount();
             
             WordCalculator.correctWordAmount();
@@ -70,7 +74,7 @@ namespace Words_Calculator
         {
             WordCalculator.readInputTextFile();
             grbPartsOfSpeech.Enabled = WordCalculator.IsOpenFile;
-            grbOutputOptions.Enabled = WordCalculator.IsOpenFile;
+            //grbOutputOptions.Enabled = WordCalculator.IsOpenFile;
             btnSearch.Enabled = WordCalculator.IsOpenFile;
         }
     }

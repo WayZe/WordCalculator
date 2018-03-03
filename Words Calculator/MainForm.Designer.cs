@@ -37,29 +37,25 @@
             this.chbDeeprichastie = new System.Windows.Forms.CheckBox();
             this.chbAll = new System.Windows.Forms.CheckBox();
             this.btnChoose = new System.Windows.Forms.Button();
-            this.msMenu = new System.Windows.Forms.MenuStrip();
-            this.tsmiFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
-            this.tsmiAppInformation = new System.Windows.Forms.ToolStripMenuItem();
             this.grbPartsOfSpeech = new System.Windows.Forms.GroupBox();
-            this.grbOutputOptions = new System.Windows.Forms.GroupBox();
             this.chbFileOutput = new System.Windows.Forms.CheckBox();
-            this.chbScreenOutput = new System.Windows.Forms.CheckBox();
-            this.msMenu.SuspendLayout();
+            this.btnResult = new System.Windows.Forms.Button();
+            this.btnFindSentence = new System.Windows.Forms.Button();
+            this.chbAnotherParts = new System.Windows.Forms.CheckBox();
+            this.btnStatistics = new System.Windows.Forms.Button();
             this.grbPartsOfSpeech.SuspendLayout();
-            this.grbOutputOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnSearch
             // 
             this.btnSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnSearch.Location = new System.Drawing.Point(233, 134);
+            this.btnSearch.Location = new System.Drawing.Point(249, 63);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(170, 108);
+            this.btnSearch.Size = new System.Drawing.Size(140, 56);
             this.btnSearch.TabIndex = 1;
-            this.btnSearch.Text = "КНОПКА НАЙТИ ДЛЯ ЕБАНОГО ФЕДИ";
+            this.btnSearch.Text = "Анализ";
             this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.searchButton_Click);
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // chbNoun
             // 
@@ -124,7 +120,7 @@
             // chbAll
             // 
             this.chbAll.AutoSize = true;
-            this.chbAll.Location = new System.Drawing.Point(16, 156);
+            this.chbAll.Location = new System.Drawing.Point(16, 179);
             this.chbAll.Name = "chbAll";
             this.chbAll.Size = new System.Drawing.Size(102, 17);
             this.chbAll.TabIndex = 9;
@@ -134,47 +130,17 @@
             // 
             // btnChoose
             // 
-            this.btnChoose.Location = new System.Drawing.Point(242, 27);
+            this.btnChoose.Location = new System.Drawing.Point(249, 11);
             this.btnChoose.Name = "btnChoose";
-            this.btnChoose.Size = new System.Drawing.Size(161, 23);
+            this.btnChoose.Size = new System.Drawing.Size(140, 23);
             this.btnChoose.TabIndex = 10;
-            this.btnChoose.Text = "Выбрать файл с текстом";
+            this.btnChoose.Text = "Выбрать файл";
             this.btnChoose.UseVisualStyleBackColor = true;
             this.btnChoose.Click += new System.EventHandler(this.btnChoose_Click);
             // 
-            // msMenu
-            // 
-            this.msMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiFile,
-            this.tsmiAppInformation});
-            this.msMenu.Location = new System.Drawing.Point(0, 0);
-            this.msMenu.Name = "msMenu";
-            this.msMenu.Size = new System.Drawing.Size(415, 24);
-            this.msMenu.TabIndex = 11;
-            this.msMenu.Text = "menuStrip";
-            // 
-            // tsmiFile
-            // 
-            this.tsmiFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripTextBox1});
-            this.tsmiFile.Name = "tsmiFile";
-            this.tsmiFile.Size = new System.Drawing.Size(48, 20);
-            this.tsmiFile.Text = "Файл";
-            // 
-            // toolStripTextBox1
-            // 
-            this.toolStripTextBox1.Name = "toolStripTextBox1";
-            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 23);
-            this.toolStripTextBox1.Text = "Открыть";
-            // 
-            // tsmiAppInformation
-            // 
-            this.tsmiAppInformation.Name = "tsmiAppInformation";
-            this.tsmiAppInformation.Size = new System.Drawing.Size(65, 20);
-            this.tsmiAppInformation.Text = "Справка";
-            // 
             // grbPartsOfSpeech
             // 
+            this.grbPartsOfSpeech.Controls.Add(this.chbAnotherParts);
             this.grbPartsOfSpeech.Controls.Add(this.chbNoun);
             this.grbPartsOfSpeech.Controls.Add(this.chbAdjective);
             this.grbPartsOfSpeech.Controls.Add(this.chbAll);
@@ -182,64 +148,77 @@
             this.grbPartsOfSpeech.Controls.Add(this.chbDeeprichastie);
             this.grbPartsOfSpeech.Controls.Add(this.chbAdverb);
             this.grbPartsOfSpeech.Controls.Add(this.chbParticiple);
-            this.grbPartsOfSpeech.Location = new System.Drawing.Point(12, 39);
+            this.grbPartsOfSpeech.Location = new System.Drawing.Point(24, 23);
             this.grbPartsOfSpeech.Name = "grbPartsOfSpeech";
-            this.grbPartsOfSpeech.Size = new System.Drawing.Size(200, 189);
+            this.grbPartsOfSpeech.Size = new System.Drawing.Size(200, 211);
             this.grbPartsOfSpeech.TabIndex = 12;
             this.grbPartsOfSpeech.TabStop = false;
             this.grbPartsOfSpeech.Text = "Выберите часть речи для поиска";
             // 
-            // grbOutputOptions
-            // 
-            this.grbOutputOptions.Controls.Add(this.chbScreenOutput);
-            this.grbOutputOptions.Controls.Add(this.chbFileOutput);
-            this.grbOutputOptions.Location = new System.Drawing.Point(242, 56);
-            this.grbOutputOptions.Name = "grbOutputOptions";
-            this.grbOutputOptions.Size = new System.Drawing.Size(140, 72);
-            this.grbOutputOptions.TabIndex = 13;
-            this.grbOutputOptions.TabStop = false;
-            this.grbOutputOptions.Text = "Параметры вывода";
-            // 
             // chbFileOutput
             // 
             this.chbFileOutput.AutoSize = true;
-            this.chbFileOutput.Location = new System.Drawing.Point(6, 19);
+            this.chbFileOutput.Location = new System.Drawing.Point(261, 40);
             this.chbFileOutput.Name = "chbFileOutput";
             this.chbFileOutput.Size = new System.Drawing.Size(108, 17);
             this.chbFileOutput.TabIndex = 0;
             this.chbFileOutput.Text = "Вывести в файл";
             this.chbFileOutput.UseVisualStyleBackColor = true;
             // 
-            // chbScreenOutput
+            // btnResult
             // 
-            this.chbScreenOutput.AutoSize = true;
-            this.chbScreenOutput.Location = new System.Drawing.Point(6, 42);
-            this.chbScreenOutput.Name = "chbScreenOutput";
-            this.chbScreenOutput.Size = new System.Drawing.Size(118, 17);
-            this.chbScreenOutput.TabIndex = 1;
-            this.chbScreenOutput.Text = "Вывести на экран";
-            this.chbScreenOutput.UseVisualStyleBackColor = true;
+            this.btnResult.Location = new System.Drawing.Point(249, 158);
+            this.btnResult.Name = "btnResult";
+            this.btnResult.Size = new System.Drawing.Size(140, 41);
+            this.btnResult.TabIndex = 14;
+            this.btnResult.Text = "Посмотреть результат анализа";
+            this.btnResult.UseVisualStyleBackColor = true;
+            // 
+            // btnFindSentence
+            // 
+            this.btnFindSentence.Location = new System.Drawing.Point(249, 125);
+            this.btnFindSentence.Name = "btnFindSentence";
+            this.btnFindSentence.Size = new System.Drawing.Size(140, 27);
+            this.btnFindSentence.TabIndex = 15;
+            this.btnFindSentence.Text = "Найти предложение";
+            this.btnFindSentence.UseVisualStyleBackColor = true;
+            // 
+            // chbAnotherParts
+            // 
+            this.chbAnotherParts.AutoSize = true;
+            this.chbAnotherParts.Location = new System.Drawing.Point(16, 156);
+            this.chbAnotherParts.Name = "chbAnotherParts";
+            this.chbAnotherParts.Size = new System.Drawing.Size(114, 17);
+            this.chbAnotherParts.TabIndex = 10;
+            this.chbAnotherParts.Text = "Остальные части";
+            this.chbAnotherParts.UseVisualStyleBackColor = true;
+            // 
+            // btnStatistics
+            // 
+            this.btnStatistics.Location = new System.Drawing.Point(249, 205);
+            this.btnStatistics.Name = "btnStatistics";
+            this.btnStatistics.Size = new System.Drawing.Size(140, 41);
+            this.btnStatistics.TabIndex = 16;
+            this.btnStatistics.Text = "Статистика";
+            this.btnStatistics.UseVisualStyleBackColor = true;
             // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(415, 244);
-            this.Controls.Add(this.grbOutputOptions);
+            this.ClientSize = new System.Drawing.Size(405, 259);
+            this.Controls.Add(this.btnStatistics);
+            this.Controls.Add(this.btnFindSentence);
+            this.Controls.Add(this.btnResult);
+            this.Controls.Add(this.chbFileOutput);
             this.Controls.Add(this.grbPartsOfSpeech);
             this.Controls.Add(this.btnChoose);
             this.Controls.Add(this.btnSearch);
-            this.Controls.Add(this.msMenu);
-            this.MainMenuStrip = this.msMenu;
             this.Name = "mainForm";
             this.Text = "Подсчёт слов";
             this.Load += new System.EventHandler(this.mainForm_Load);
-            this.msMenu.ResumeLayout(false);
-            this.msMenu.PerformLayout();
             this.grbPartsOfSpeech.ResumeLayout(false);
             this.grbPartsOfSpeech.PerformLayout();
-            this.grbOutputOptions.ResumeLayout(false);
-            this.grbOutputOptions.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -255,14 +234,12 @@
         private System.Windows.Forms.CheckBox chbDeeprichastie;
         private System.Windows.Forms.CheckBox chbAll;
         private System.Windows.Forms.Button btnChoose;
-        private System.Windows.Forms.MenuStrip msMenu;
-        private System.Windows.Forms.ToolStripMenuItem tsmiFile;
-        private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
-        private System.Windows.Forms.ToolStripMenuItem tsmiAppInformation;
         private System.Windows.Forms.GroupBox grbPartsOfSpeech;
-        private System.Windows.Forms.GroupBox grbOutputOptions;
-        private System.Windows.Forms.CheckBox chbScreenOutput;
         private System.Windows.Forms.CheckBox chbFileOutput;
+        private System.Windows.Forms.Button btnResult;
+        private System.Windows.Forms.Button btnFindSentence;
+        private System.Windows.Forms.CheckBox chbAnotherParts;
+        private System.Windows.Forms.Button btnStatistics;
     }
 }
 
