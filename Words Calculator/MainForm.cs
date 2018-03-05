@@ -32,7 +32,7 @@ namespace Words_Calculator
         /// <param name="e"></param>
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            Console.Write("fgjkl");
+
             WordCalculator.readInputEndsFile();
 
             WordCalculator.divideIntoSentences();
