@@ -41,12 +41,12 @@ namespace Words_Calculator
             
             WordCalculator.divideIntoWords();
             
-            if (chbAdjective.Checked == chbAll.Checked)
+            if (chbAdjective.Checked == true)
                 WordCalculator.findAdjectivesWithMinFirstKindError();
 
             //WordCalculator.findAdjectivesWithMinSecondKindError();
 
-            if (chbAdverb.Checked == chbAll.Checked)
+            if (chbAdverb.Checked == true)
                 WordCalculator.findAdverb();
 
             WordCalculator.countWordAmount();
