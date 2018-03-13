@@ -36,20 +36,24 @@
             this.chbParticiple = new System.Windows.Forms.CheckBox();
             this.chbDeeprichastie = new System.Windows.Forms.CheckBox();
             this.chbAll = new System.Windows.Forms.CheckBox();
-            this.btnChoose = new System.Windows.Forms.Button();
+            this.btnChooseInputFile = new System.Windows.Forms.Button();
             this.grbPartsOfSpeech = new System.Windows.Forms.GroupBox();
-            this.chbFileOutput = new System.Windows.Forms.CheckBox();
-            this.btnResult = new System.Windows.Forms.Button();
-            this.btnFindSentence = new System.Windows.Forms.Button();
             this.chbAnotherParts = new System.Windows.Forms.CheckBox();
             this.btnStatistics = new System.Windows.Forms.Button();
+            this.tbInputText = new System.Windows.Forms.TextBox();
+            this.grbFileWork = new System.Windows.Forms.GroupBox();
+            this.tbOutputFilePath = new System.Windows.Forms.TextBox();
+            this.tbInputFilePath = new System.Windows.Forms.TextBox();
+            this.btnChooseOutputFile = new System.Windows.Forms.Button();
+            this.btnClearTextBox = new System.Windows.Forms.Button();
             this.grbPartsOfSpeech.SuspendLayout();
+            this.grbFileWork.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnSearch
             // 
             this.btnSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnSearch.Location = new System.Drawing.Point(249, 63);
+            this.btnSearch.Location = new System.Drawing.Point(256, 368);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(140, 56);
             this.btnSearch.TabIndex = 1;
@@ -128,15 +132,15 @@
             this.chbAll.UseVisualStyleBackColor = true;
             this.chbAll.CheckedChanged += new System.EventHandler(this.chbAll_CheckedChanged);
             // 
-            // btnChoose
+            // btnChooseInputFile
             // 
-            this.btnChoose.Location = new System.Drawing.Point(249, 11);
-            this.btnChoose.Name = "btnChoose";
-            this.btnChoose.Size = new System.Drawing.Size(140, 23);
-            this.btnChoose.TabIndex = 10;
-            this.btnChoose.Text = "Выбрать файл";
-            this.btnChoose.UseVisualStyleBackColor = true;
-            this.btnChoose.Click += new System.EventHandler(this.btnChoose_Click);
+            this.btnChooseInputFile.Location = new System.Drawing.Point(16, 19);
+            this.btnChooseInputFile.Name = "btnChooseInputFile";
+            this.btnChooseInputFile.Size = new System.Drawing.Size(158, 23);
+            this.btnChooseInputFile.TabIndex = 10;
+            this.btnChooseInputFile.Text = "Выбрать входной файл";
+            this.btnChooseInputFile.UseVisualStyleBackColor = true;
+            this.btnChooseInputFile.Click += new System.EventHandler(this.btnChooseInputFile_Click);
             // 
             // grbPartsOfSpeech
             // 
@@ -148,40 +152,12 @@
             this.grbPartsOfSpeech.Controls.Add(this.chbDeeprichastie);
             this.grbPartsOfSpeech.Controls.Add(this.chbAdverb);
             this.grbPartsOfSpeech.Controls.Add(this.chbParticiple);
-            this.grbPartsOfSpeech.Location = new System.Drawing.Point(24, 23);
+            this.grbPartsOfSpeech.Location = new System.Drawing.Point(24, 29);
             this.grbPartsOfSpeech.Name = "grbPartsOfSpeech";
             this.grbPartsOfSpeech.Size = new System.Drawing.Size(200, 211);
             this.grbPartsOfSpeech.TabIndex = 12;
             this.grbPartsOfSpeech.TabStop = false;
             this.grbPartsOfSpeech.Text = "Выберите часть речи для поиска";
-            // 
-            // chbFileOutput
-            // 
-            this.chbFileOutput.AutoSize = true;
-            this.chbFileOutput.Location = new System.Drawing.Point(261, 40);
-            this.chbFileOutput.Name = "chbFileOutput";
-            this.chbFileOutput.Size = new System.Drawing.Size(108, 17);
-            this.chbFileOutput.TabIndex = 0;
-            this.chbFileOutput.Text = "Вывести в файл";
-            this.chbFileOutput.UseVisualStyleBackColor = true;
-            // 
-            // btnResult
-            // 
-            this.btnResult.Location = new System.Drawing.Point(249, 158);
-            this.btnResult.Name = "btnResult";
-            this.btnResult.Size = new System.Drawing.Size(140, 41);
-            this.btnResult.TabIndex = 14;
-            this.btnResult.Text = "Посмотреть результат анализа";
-            this.btnResult.UseVisualStyleBackColor = true;
-            // 
-            // btnFindSentence
-            // 
-            this.btnFindSentence.Location = new System.Drawing.Point(249, 125);
-            this.btnFindSentence.Name = "btnFindSentence";
-            this.btnFindSentence.Size = new System.Drawing.Size(140, 27);
-            this.btnFindSentence.TabIndex = 15;
-            this.btnFindSentence.Text = "Найти предложение";
-            this.btnFindSentence.UseVisualStyleBackColor = true;
             // 
             // chbAnotherParts
             // 
@@ -195,30 +171,86 @@
             // 
             // btnStatistics
             // 
-            this.btnStatistics.Location = new System.Drawing.Point(249, 205);
+            this.btnStatistics.Location = new System.Drawing.Point(256, 446);
             this.btnStatistics.Name = "btnStatistics";
             this.btnStatistics.Size = new System.Drawing.Size(140, 41);
             this.btnStatistics.TabIndex = 16;
             this.btnStatistics.Text = "Статистика";
             this.btnStatistics.UseVisualStyleBackColor = true;
             // 
+            // tbInputText
+            // 
+            this.tbInputText.Location = new System.Drawing.Point(256, 29);
+            this.tbInputText.Multiline = true;
+            this.tbInputText.Name = "tbInputText";
+            this.tbInputText.Size = new System.Drawing.Size(390, 173);
+            this.tbInputText.TabIndex = 17;
+            // 
+            // grbFileWork
+            // 
+            this.grbFileWork.Controls.Add(this.tbOutputFilePath);
+            this.grbFileWork.Controls.Add(this.tbInputFilePath);
+            this.grbFileWork.Controls.Add(this.btnChooseOutputFile);
+            this.grbFileWork.Controls.Add(this.btnChooseInputFile);
+            this.grbFileWork.Location = new System.Drawing.Point(24, 252);
+            this.grbFileWork.Name = "grbFileWork";
+            this.grbFileWork.Size = new System.Drawing.Size(631, 88);
+            this.grbFileWork.TabIndex = 18;
+            this.grbFileWork.TabStop = false;
+            this.grbFileWork.Text = "Работа с файлами";
+            // 
+            // tbOutputFilePath
+            // 
+            this.tbOutputFilePath.Location = new System.Drawing.Point(197, 54);
+            this.tbOutputFilePath.Name = "tbOutputFilePath";
+            this.tbOutputFilePath.Size = new System.Drawing.Size(415, 20);
+            this.tbOutputFilePath.TabIndex = 13;
+            // 
+            // tbInputFilePath
+            // 
+            this.tbInputFilePath.Location = new System.Drawing.Point(197, 21);
+            this.tbInputFilePath.Name = "tbInputFilePath";
+            this.tbInputFilePath.Size = new System.Drawing.Size(415, 20);
+            this.tbInputFilePath.TabIndex = 12;
+            // 
+            // btnChooseOutputFile
+            // 
+            this.btnChooseOutputFile.Location = new System.Drawing.Point(16, 52);
+            this.btnChooseOutputFile.Name = "btnChooseOutputFile";
+            this.btnChooseOutputFile.Size = new System.Drawing.Size(158, 23);
+            this.btnChooseOutputFile.TabIndex = 11;
+            this.btnChooseOutputFile.Text = "Выбрать выходной файл";
+            this.btnChooseOutputFile.UseVisualStyleBackColor = true;
+            this.btnChooseOutputFile.Click += new System.EventHandler(this.btnChooseOutputFile_Click);
+            // 
+            // btnClearTextBox
+            // 
+            this.btnClearTextBox.Location = new System.Drawing.Point(526, 214);
+            this.btnClearTextBox.Name = "btnClearTextBox";
+            this.btnClearTextBox.Size = new System.Drawing.Size(110, 26);
+            this.btnClearTextBox.TabIndex = 19;
+            this.btnClearTextBox.Text = "Очистить";
+            this.btnClearTextBox.UseVisualStyleBackColor = true;
+            this.btnClearTextBox.Click += new System.EventHandler(this.btnClearTextBox_Click);
+            // 
             // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(405, 259);
+            this.ClientSize = new System.Drawing.Size(683, 509);
+            this.Controls.Add(this.btnClearTextBox);
+            this.Controls.Add(this.grbFileWork);
+            this.Controls.Add(this.tbInputText);
             this.Controls.Add(this.btnStatistics);
-            this.Controls.Add(this.btnFindSentence);
-            this.Controls.Add(this.btnResult);
-            this.Controls.Add(this.chbFileOutput);
             this.Controls.Add(this.grbPartsOfSpeech);
-            this.Controls.Add(this.btnChoose);
             this.Controls.Add(this.btnSearch);
             this.Name = "mainForm";
             this.Text = "Подсчёт слов";
             this.Load += new System.EventHandler(this.mainForm_Load);
             this.grbPartsOfSpeech.ResumeLayout(false);
             this.grbPartsOfSpeech.PerformLayout();
+            this.grbFileWork.ResumeLayout(false);
+            this.grbFileWork.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -233,13 +265,16 @@
         private System.Windows.Forms.CheckBox chbParticiple;
         private System.Windows.Forms.CheckBox chbDeeprichastie;
         private System.Windows.Forms.CheckBox chbAll;
-        private System.Windows.Forms.Button btnChoose;
+        private System.Windows.Forms.Button btnChooseInputFile;
         private System.Windows.Forms.GroupBox grbPartsOfSpeech;
-        private System.Windows.Forms.CheckBox chbFileOutput;
-        private System.Windows.Forms.Button btnResult;
-        private System.Windows.Forms.Button btnFindSentence;
         private System.Windows.Forms.CheckBox chbAnotherParts;
         private System.Windows.Forms.Button btnStatistics;
+        public System.Windows.Forms.TextBox tbInputText;
+        private System.Windows.Forms.GroupBox grbFileWork;
+        private System.Windows.Forms.TextBox tbOutputFilePath;
+        private System.Windows.Forms.TextBox tbInputFilePath;
+        private System.Windows.Forms.Button btnChooseOutputFile;
+        private System.Windows.Forms.Button btnClearTextBox;
     }
 }
 

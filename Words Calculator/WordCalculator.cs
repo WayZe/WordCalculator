@@ -16,22 +16,6 @@ public class WordCalculator
     // Текст файла.
     private static String fileString;
 
-    ///ПУТИ К ФАЙЛАМ
-    // Путь к входному файлу с текстом.
-    private static String inputTextFilePath = @"";
-    // Путь к входному вспомогательному файлу.
-    private const String inputSupportFilePath = @"D:\Langs\C#\WordCalculator\InputSupportFile.txt";
-    // Путь к выходному файлу c ошибкой второго рода.
-    private const String secondKindErrorFilePath = @"D:\Langs\C#\WordCalculator\SecondKindErrorOutputFile.txt";
-    // Путь к выходному файлу с ошибкой первого рода.
-    //private const String firstKindErrorFilePath = @"D:\Langs\C#\WordCalculator\FirstKindErrorOutputFile.txt";
-    // Путь к выходному файлу с пронумерованными предложениями.
-    private const String sentencesWithNumberFilePath = @"D:\Langs\C#\WordCalculator\SentencesWithNumberOutputFile.txt";
-    // Начальная директория для открытия файла
-    private const String startDirectory = @"D:\Langs\C#";
-    // Фильтр, чтобы можно было открывать только текстовые файлы
-    private const String filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-
     ///РАЗДЕЛИТЕЛИ
     // Разделитель в вспомогательном файле
     private const char supportSeparator = ' ';
@@ -81,31 +65,44 @@ public class WordCalculator
     private static String[] arrayOfAdjectiveEnds;
     // Массив суффиксов ПРИЛАГАТЕЛЬНЫХ
     private static String[] arrayOfAdjectiveSuffixes;
+    // Массив суффиксов ГЛАГОЛОВ 
+    private static String[] arrayOfVerbSuffixes;
+    // Массив окончаний ГЛАГОЛОВ 
+    private static String[] arrayOfVerbEnds;
     // Массив окончаний НАРЕЧИЙ
     private static String[] arrayOfAdverbEnds;
     // Массив начал НАРЕЧИЙ
     private static String[] arrayOfAdverbStarts;
     // Массив словарных НАРЕЧИЙ
     private static String[] arrayOfDictionaryAdverbs;
+    //Массив суффиксов ПРИЧАСТИЙ
+    private static String[] arrayOfParticipleSuffixes;
+    //Массив окончаний ПРИЧАСТИЙ
+    private static String[] arrayOfParticipleEndings;
+    //Массив постфиксов ПРИЧАСТИЙ
+    private static String[] arrayOfParticiplePostfixes;
+    //Массив суффиксов ДЕЕПРИЧАСТИЙ
+    private static String[] arrayOfDeeprSuffixes;
+    // Массив начал ЧИСЛИТЕЛЬНЫХ
+    private static String[] arrayOfNumeralStarts;
+    // Массив окончаний ЧИСЛИТЕЛЬНЫХ
+    private static String[] arrayOfNumeralEnds;
+    // Массив словарных ЧИСЛИТЕЛЬНЫХ
+    private static String[] arrayOfDictionaryNumerals;
+    // Массив словарных МЕСТОИМЕНИЙ
+    private static String[] arrayOfDictionaryPronouns;
+    // Массив словарных СОЮЗОВ
+    private static String[] arrayOfDictionaryUnions;
+    // Массив словарных ПРЕДЛОГОВ
+    private static String[] arrayOfDictionaryPrepositions;
+    // Массив словарных ЧАСТИЦ
+    private static String[] arrayOfDictionaryParticles;
+    // Массив словарных МЕЖДОМЕТИЙ
+    private static String[] arrayOfDictionaryInterjections;
 
-    // Наличие открытого файла
-    private static bool isOpenFile = false;
-    public static bool IsOpenFile
-    {
-        get
-        {
-            if (inputTextFilePath != "")
-            {
-                isOpenFile = true;
-            }
-            else
-            {
-                isOpenFile = false;
-            }
+    public static string FileString { get => fileString; set => fileString = value; }
 
-            return isOpenFile;
-        }
-    }
+
 
     #endregion
 
@@ -115,34 +112,21 @@ public class WordCalculator
     /// </summary>
     public static void readInputTextFile()
     {
-
-        OpenFileDialog openFileDialog = new OpenFileDialog();
-
-
-        openFileDialog.InitialDirectory = startDirectory;
-        openFileDialog.Filter = filter;
-        openFileDialog.FilterIndex = 0;
-        openFileDialog.RestoreDirectory = true;
-
-        if (openFileDialog.ShowDialog() == DialogResult.OK)
+        StreamReader streamReader = new StreamReader(File.OpenRead(FileHandler.InputTextFilePath), Encoding.GetEncoding(1251));
+        using (streamReader)
         {
-                inputTextFilePath = openFileDialog.FileName;
-                StreamReader streamReader = new StreamReader(File.OpenRead(inputTextFilePath), Encoding.GetEncoding(1251));
-                using (streamReader)
-                {
-                    fileString = streamReader.ReadToEnd();
-                    Console.WriteLine(fileString);
-                }
+            FileString = streamReader.ReadToEnd();
+            Console.WriteLine(FileString);
         }
     }
     #endregion
 
     #region Чтение из вспомогательного файла
-    public static void readInputEndsFile()
+    public static void readSupportFile()
     {
         try
         {
-            using (StreamReader streamReader = new StreamReader(inputSupportFilePath, Encoding.GetEncoding(1251)))
+            using (StreamReader streamReader = new StreamReader(FileHandler.InputSupportFilePath, Encoding.GetEncoding(1251)))
             {
                 String tmpString = streamReader.ReadLine();
 
@@ -154,6 +138,17 @@ public class WordCalculator
                 tmpString = streamReader.ReadLine();
                 arrayOfAdjectiveSuffixes = tmpString.Split(supportSeparator);
 
+
+                tmpString = streamReader.ReadLine();
+
+                // Инициализация списка суффиксов ГЛАГОЛОВ 
+                tmpString = streamReader.ReadLine();
+                arrayOfVerbSuffixes = tmpString.Split(supportSeparator);
+
+                // Инициализация списка окончаний ГЛАГОЛОВ 
+                tmpString = streamReader.ReadLine();
+                arrayOfVerbEnds = tmpString.Split(supportSeparator);
+                tmpString = streamReader.ReadLine();
 
 
                 tmpString = streamReader.ReadLine();
@@ -169,11 +164,71 @@ public class WordCalculator
                 // Инициализация списка словарных НАРЕЧИЙ
                 tmpString = streamReader.ReadLine();
                 arrayOfDictionaryAdverbs = tmpString.Split(supportSeparator);
+
+
+                tmpString = streamReader.ReadLine();
+
+                // Инициализация списка суффиксов ПРИЧАСТИЙ
+                tmpString = streamReader.ReadLine();
+                arrayOfParticipleSuffixes = tmpString.Split(supportSeparator);
+
+                // Инициализация списка окончаний ПРИЧАСТИЙ
+                tmpString = streamReader.ReadLine();
+                arrayOfParticipleEndings = tmpString.Split(supportSeparator);
+
+                // Инициализация списка постфиксов ПРИЧАСТИЙ
+                tmpString = streamReader.ReadLine();
+                arrayOfParticiplePostfixes = tmpString.Split(supportSeparator);
+
+
+                tmpString = streamReader.ReadLine();
+
+                // Инициализация списка суффиксов ДЕЕПРИЧАСТИЙ 
+                tmpString = streamReader.ReadLine();
+                arrayOfDeeprSuffixes = tmpString.Split(supportSeparator);
+
+                // Инициализация списка начал ЧИСЛИТЕЛЬНЫХ
+                tmpString = streamReader.ReadLine();
+                arrayOfNumeralStarts = tmpString.Split(supportSeparator);
+
+                // Инициализация списка окончаний ЧИСЛИТЕЛЬНЫХ
+                tmpString = streamReader.ReadLine();
+                arrayOfNumeralEnds = tmpString.Split(supportSeparator);
+
+                // Инициализация списка словарных ЧИСЛИТЕЛЬНЫХ
+                tmpString = streamReader.ReadLine();
+                arrayOfDictionaryNumerals = tmpString.Split(supportSeparator);
+                tmpString = streamReader.ReadLine();
+
+                // Инициализация списка словарных МЕСТОИМЕНИЙ
+                tmpString = streamReader.ReadLine();
+                arrayOfDictionaryPronouns = tmpString.Split(supportSeparator);
+                tmpString = streamReader.ReadLine();
+
+                // Инициализация списка словарных СОЮЗОВ
+                tmpString = streamReader.ReadLine();
+                arrayOfDictionaryUnions = tmpString.Split(supportSeparator);
+                tmpString = streamReader.ReadLine();
+
+                // Инициализация списка словарных ПРЕДЛОГОВ
+                tmpString = streamReader.ReadLine();
+                arrayOfDictionaryPrepositions = tmpString.Split(supportSeparator);
+                tmpString = streamReader.ReadLine();
+
+                // Инициализация списка словарных ЧАСТИЦ
+                tmpString = streamReader.ReadLine();
+                arrayOfDictionaryParticles = tmpString.Split(supportSeparator);
+                tmpString = streamReader.ReadLine();
+
+                // Инициализация списка словарных МЕЖДОМЕТИЙ
+                tmpString = streamReader.ReadLine();
+                arrayOfDictionaryInterjections = tmpString.Split(supportSeparator);
+
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("The file could not be read:");
+            Console.WriteLine("Не удалось прочитать файл:");
             Console.WriteLine(e.Message);
         }
     }
@@ -182,7 +237,7 @@ public class WordCalculator
     #region Деление строки на предложения
     public static void divideIntoSentences()
     {
-        String[] sentenceArray = fileString.Split(sentenceSeparatorsArray);
+        String[] sentenceArray = FileString.Split(sentenceSeparatorsArray);
 
         foreach (var sentence in sentenceArray)
         {
@@ -197,7 +252,7 @@ public class WordCalculator
     #region Нумерация предложений и запись пронумерованных предложений в файл
     public static void writeFileWithSentenceNumber()
     {
-        using (StreamWriter outputFile = new StreamWriter(sentencesWithNumberFilePath))
+        using (StreamWriter outputFile = new StreamWriter(FileHandler.SentencesWithNumberFilePath))
         {
             for (var sentenceNumber = 0; sentenceNumber < listOfSentences.Count; sentenceNumber++)
             {
@@ -251,26 +306,29 @@ public class WordCalculator
 
             bool isAdjective = false;
 
-            // Проверка на то является ли currentWord прилагательным
-            for (var endNumber = 0; endNumber < arrayOfAdjectiveEnds.Length; endNumber++)
+            if (wordList[elementNumber].partOfSpeech == "")
             {
-                int wordLengthWithoutEnd = currentWord.Length - arrayOfAdjectiveEnds[endNumber].Length;
-                if (wordLengthWithoutEnd > 0)
+                // Проверка на то является ли currentWord прилагательным
+                for (var endNumber = 0; endNumber < arrayOfAdjectiveEnds.Length; endNumber++)
                 {
-                    if (currentWord.Substring(wordLengthWithoutEnd) == arrayOfAdjectiveEnds[endNumber])
+                    int wordLengthWithoutEnd = currentWord.Length - arrayOfAdjectiveEnds[endNumber].Length;
+                    if (wordLengthWithoutEnd > 0)
                     {
-                        isAdjective = true;
-                        break;
+                        if (currentWord.Substring(wordLengthWithoutEnd) == arrayOfAdjectiveEnds[endNumber])
+                        {
+                            isAdjective = true;
+                            break;
+                        }
                     }
                 }
-            }
 
-            // Если currentWord - прилагательное, то добавляем его в список прилагательных
-            if (isAdjective)
-            {
-                Word tempWord = wordList[elementNumber];
-                tempWord = new Word(tempWord.word, "Прилагательное", tempWord.sentenceNumber, tempWord.wordAmount);
-                wordList[elementNumber] = tempWord;
+                // Если currentWord - прилагательное, то добавляем его в список прилагательных
+                if (isAdjective)
+                {
+                    Word tempWord = wordList[elementNumber];
+                    tempWord = new Word(tempWord.word, "Прилагательное", tempWord.sentenceNumber, tempWord.wordAmount);
+                    wordList[elementNumber] = tempWord;
+                }
             }
         }
     }
@@ -336,173 +394,325 @@ public class WordCalculator
 
             bool isAdverb = false;
 
-            // Проверка на то является ли currentWord прилагательным
-            for (var endNumber = 0; endNumber < arrayOfAdverbEnds.Length; endNumber++)
+            if (wordList[elementNumber].partOfSpeech == "")
             {
-                int wordLengthWithoutEnd = currentWord.Length - arrayOfAdjectiveEnds[endNumber].Length;
-                if (wordLengthWithoutEnd > 0)
+                // Проверка на то является ли currentWord прилагательным
+                for (var endNumber = 0; endNumber < arrayOfAdverbEnds.Length; endNumber++)
                 {
-                    if (currentWord.Substring(wordLengthWithoutEnd) == arrayOfAdverbEnds[endNumber])
+                    int wordLengthWithoutEnd = currentWord.Length - arrayOfAdjectiveEnds[endNumber].Length;
+                    if (wordLengthWithoutEnd > 0)
+                    {
+                        if (currentWord.Substring(wordLengthWithoutEnd) == arrayOfAdverbEnds[endNumber])
+                        {
+                            isAdverb = true;
+                            break;
+                        }
+                    }
+                }
+
+                for (var startNumber = 0; startNumber < arrayOfAdverbStarts.Length; startNumber++)
+                {
+                    int wordLengthWithoutStart = currentWord.Length - arrayOfAdverbStarts[startNumber].Length;
+                    if (wordLengthWithoutStart > 0)
+                    {
+                        if (currentWord.Substring(0, wordLengthWithoutStart) == arrayOfAdverbStarts[startNumber])
+                        {
+                            isAdverb = true;
+                            break;
+                        }
+                    }
+                }
+
+                for (var dictionaryWordNumber = 0; dictionaryWordNumber < arrayOfDictionaryAdverbs.Length; dictionaryWordNumber++)
+                {
+                    if (currentWord == arrayOfDictionaryAdverbs[dictionaryWordNumber])
                     {
                         isAdverb = true;
                         break;
                     }
                 }
-            }
 
-            for (var startNumber = 0; startNumber < arrayOfAdverbStarts.Length; startNumber++)
+                // Если currentWord - прилагательное, то добавляем его в список наречием
+                if (isAdverb)
+                {
+                    Word tempWord = wordList[elementNumber];
+                    tempWord = new Word(tempWord.word, "Наречие", tempWord.sentenceNumber, tempWord.wordAmount);
+                    wordList[elementNumber] = tempWord;
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region Поиск ГЛАГОЛОВ 
+    public static void findVerb()
+    {
+        for (var elementNumber = 0; elementNumber < wordList.Count; elementNumber++)
+        {
+            String currentWord = wordList.ElementAt(elementNumber).word;
+
+            bool isVerb = false;
+
+            if (wordList[elementNumber].partOfSpeech == "")
             {
-                int wordLengthWithoutStart = currentWord.Length - arrayOfAdverbStarts[startNumber].Length;
+                // Проверка на то, является ли currentWord глаголом 
+                for (var endNumber = 0; endNumber < arrayOfVerbEnds.Length; endNumber++)
+                {
+                    for (var suffixNumber = 0; suffixNumber < arrayOfVerbSuffixes.Length; suffixNumber++)
+                    {
+                        int wordLengthWithoutEndAndSuffix =
+                        currentWord.Length - arrayOfVerbEnds[endNumber].Length
+                        - arrayOfVerbSuffixes[suffixNumber].Length;
+
+                        if (wordLengthWithoutEndAndSuffix > 0)
+                            if (currentWord.Substring(wordLengthWithoutEndAndSuffix,
+                            arrayOfVerbSuffixes[suffixNumber].Length)
+                            == arrayOfVerbSuffixes[suffixNumber])
+                            {
+                                isVerb = true;
+                                break;
+                            }
+                    }
+                    if (isVerb) break;
+                }
+
+                for (var endNumber = 0; endNumber < arrayOfVerbEnds.Length; endNumber++)
+                {
+                    int wordLengthWithoutEnd = currentWord.Length - arrayOfVerbEnds[endNumber].Length;
+                    if (wordLengthWithoutEnd > 0)
+                    {
+                        if (currentWord.Substring(wordLengthWithoutEnd) == arrayOfVerbEnds[endNumber])
+                        {
+                            isVerb = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Если currentWord - глагол, то добавляем его в список глаголов 
+                if (isVerb)
+                {
+                    Word tempWord = wordList[elementNumber];
+                    tempWord = new Word(tempWord.word, "Глагол", tempWord.sentenceNumber, tempWord.wordAmount);
+                    wordList[elementNumber] = tempWord;
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region Поиск ПРИЧАСТИЙ
+    public static void findParticiple()
+    {
+        for (var elementNumber = 0; elementNumber < wordList.Count; elementNumber++)
+        {
+            if (wordList[elementNumber].partOfSpeech == "")
+            {
+                String currentWord = wordList.ElementAt(elementNumber).word;
+                String subword = currentWord;
+                String mainWord = "";
+                bool isParticiple = false;
+
+                //Цикл по постфиксам
+                foreach (string postfix in arrayOfParticiplePostfixes)
+                {
+                    if (currentWord.EndsWith(postfix))
+                    {
+                        subword = currentWord.Substring(0, (currentWord.Length - postfix.Length));
+                    }
+                }
+
+                //Цикл по окончаниям из двух букв
+                foreach (string ending in arrayOfParticipleEndings)
+                {
+                    if (currentWord.Length - ending.Length > 0)
+                    {
+                        mainWord = subword.Substring(0, currentWord.Length - ending.Length); //Убираем окончания
+
+                        if (subword.EndsWith(ending))
+                        {
+                            //Цикл по суффикам
+                            foreach (string suffix in arrayOfParticipleSuffixes)
+                            {
+                                if (mainWord.EndsWith(suffix))
+                                {
+                                    isParticiple = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Если currentWord - прилагательное, то добавляем его в список причастий
+                if (isParticiple)
+                {
+                    Word tempWord = wordList[elementNumber];
+                    tempWord = new Word(tempWord.word, "Причастие", tempWord.sentenceNumber, tempWord.wordAmount);
+                    wordList[elementNumber] = tempWord;
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region Поиск ДЕЕПРИЧАСТИЙ
+    public static void findDeeprichastie()
+
+    {
+        for (var elementNumber = 0; elementNumber < wordList.Count; elementNumber++)
+        {
+            String currentWord = wordList.ElementAt(elementNumber).word;
+            
+            bool isDeepr = false;
+
+            if (wordList[elementNumber].partOfSpeech == "")
+            {
+                // Проверка на то является ли currentWord деепричастием
+                for (var suffixNumber = 0; suffixNumber < arrayOfDeeprSuffixes.Length; suffixNumber++)
+                {
+                    if (currentWord.Length > arrayOfDeeprSuffixes[suffixNumber].Length)
+                    {
+                        if ((currentWord.EndsWith(arrayOfDeeprSuffixes[suffixNumber]) || currentWord.EndsWith(arrayOfDeeprSuffixes[suffixNumber] + "сь")))
+                        {
+                            isDeepr = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Если currentWord - деепричастие, то добавляем его в список прилагательных
+                if (isDeepr)
+                {
+                    Word tempWord = wordList[elementNumber];
+                    tempWord = new Word(tempWord.word, "Деепричастие", tempWord.sentenceNumber, tempWord.wordAmount);
+                    wordList[elementNumber] = tempWord;
+                }
+            }
+        }
+    
+    }
+    #endregion
+
+    #region Поиск ЧИСЛИТЕЛЬНЫХ, МЕСТОИМЕНИЙ, СОЮЗОВ, ПРЕДЛОГОВ, ЧАСТИЦ и МЕЖДОМЕТИЙ по словарю
+    public static void findDictionary()
+    {
+        for (var elementNumber = 0; elementNumber < wordList.Count; elementNumber++)
+        {
+            String currentWord = wordList.ElementAt(elementNumber).word;
+
+            bool isDictionary = false;
+
+            // Проверка на то, является ли currentWord ЧИСЛИТЕЛЬНЫМ
+            for (var startNumber = 0; startNumber < arrayOfNumeralStarts.Length; startNumber++)
+            {
+                int wordLengthWithoutStart = currentWord.Length - arrayOfNumeralStarts[startNumber].Length;
                 if (wordLengthWithoutStart > 0)
                 {
-                    if (currentWord.Substring(0, wordLengthWithoutStart) == arrayOfAdverbEnds[startNumber])
+                    if (currentWord.Substring(0, wordLengthWithoutStart) == arrayOfNumeralStarts[startNumber])
                     {
-                        isAdverb = true;
+                        isDictionary = true;
                         break;
                     }
                 }
             }
 
-            for (var dictionaryWordNumber = 0; dictionaryWordNumber < arrayOfDictionaryAdverbs.Length; dictionaryWordNumber++)
+            for (var endNumber = 0; endNumber < arrayOfNumeralEnds.Length; endNumber++)
             {
-                if (currentWord == arrayOfDictionaryAdverbs[dictionaryWordNumber])
+                int wordLengthWithoutEnd = currentWord.Length - arrayOfNumeralEnds[endNumber].Length;
+                if (wordLengthWithoutEnd > 0)
                 {
-                    isAdverb = true;
+                    if (currentWord.Substring(wordLengthWithoutEnd) == arrayOfNumeralEnds[endNumber])
+                    {
+                        isDictionary = true;
+                        break;
+                    }
+                }
+            }
+
+            for (var dictionaryWordNumber = 0; dictionaryWordNumber < arrayOfDictionaryNumerals.Length; dictionaryWordNumber++)
+            {
+                if (currentWord == arrayOfDictionaryNumerals[dictionaryWordNumber])
+                {
+                    isDictionary = true;
                     break;
                 }
             }
 
-            // Если currentWord - прилагательное, то добавляем его в список прилагательных
-            if (isAdverb)
+            // Проверка на то, является ли currentWord словом из словаря МЕСТОИМЕНИЙ
+            for (var dictionaryWordNumber = 0; dictionaryWordNumber < arrayOfDictionaryPronouns.Length; dictionaryWordNumber++)
+            {
+                if (currentWord == arrayOfDictionaryPronouns[dictionaryWordNumber])
+                {
+                    isDictionary = true;
+                    break;
+                }
+            }
+
+            // Проверка на то, является ли currentWord словом из словаря СОЮЗОВ
+            for (var dictionaryWordNumber = 0; dictionaryWordNumber < arrayOfDictionaryUnions.Length; dictionaryWordNumber++)
+            {
+                if (currentWord == arrayOfDictionaryUnions[dictionaryWordNumber])
+                {
+                    isDictionary = true;
+                    break;
+                }
+            }
+
+            // Проверка на то, является ли currentWord словом из словаря ПРЕДЛОГОВ
+            for (var dictionaryWordNumber = 0; dictionaryWordNumber < arrayOfDictionaryPrepositions.Length; dictionaryWordNumber++)
+            {
+                if (currentWord == arrayOfDictionaryPrepositions[dictionaryWordNumber])
+                {
+                    isDictionary = true;
+                    break;
+                }
+            }
+
+            // Проверка на то, является ли currentWord словом из словаря ЧАСТИЦ
+            for (var dictionaryWordNumber = 0; dictionaryWordNumber < arrayOfDictionaryParticles.Length; dictionaryWordNumber++)
+            {
+                if (currentWord == arrayOfDictionaryParticles[dictionaryWordNumber])
+                {
+                    isDictionary = true;
+                    break;
+                }
+            }
+
+            // Проверка на то, является ли currentWord словом из словаря МЕЖДОМЕТИЙ
+            for (var dictionaryWordNumber = 0; dictionaryWordNumber < arrayOfDictionaryInterjections.Length; dictionaryWordNumber++)
+            {
+                if (currentWord == arrayOfDictionaryInterjections[dictionaryWordNumber])
+                {
+                    isDictionary = true;
+                    break;
+                }
+            }
+
+            // Если currentWord - слово из словаря, то добавляем его в список слов из словаря
+            if (isDictionary)
             {
                 Word tempWord = wordList[elementNumber];
-                tempWord = new Word(tempWord.word, "Наречие", tempWord.sentenceNumber, tempWord.wordAmount);
+                tempWord = new Word(tempWord.word, "Слова из словаря", tempWord.sentenceNumber, tempWord.wordAmount);
                 wordList[elementNumber] = tempWord;
             }
         }
     }
     #endregion
 
-    /* ОСТАВШИЕСЯ ЧАСТИ РЕЧИ
     #region Поиск СУЩЕСТВИТЕЛЬНЫХ
     public static void findNoun()
     {
-        for (int i = 0; i < wordList.Count; i++) //ОГО ЕГО ОМУ ЕМУ
+        for (var elementNumber = 0; elementNumber < wordList.Count; elementNumber++)
         {
-            wordList.Add("");                       //базовое значение для каждого нового слова - нулевое
-            bool checkfalseword = false;                   //опускаем флаг совпадения с ложным словом
-            for (int l = 0; l < false_word.Length; l++)    //сравнение со всеми ложными словами
+            if (wordList[elementNumber].partOfSpeech == "")
             {
-                if (false_word[l] == Words[i])             //при совпадении с ложным словом 
-                {
-                    checkfalseword = true;                 //поднятие флага и выход из итерации цикла
-                    break;
-                }
-            }
-            if (checkfalseword) continue;                   //если данное слово не входит список ложных
-            if (Words[i].Length > 2)                        //отбрасываются все слова меньше 3х символов
-            {
-                bool flag = false;   //опускаем флаг (флаг поднимется если данное слово сущ в Т.п или др часть речи:
-                                     //совпадение с окончание др части речи или прил в П.п с предлогом)
-
-                for (int j = 0; j < False_ending.Length; j++)       //сравнение окончания слова со всеми ложными окончаниями
-                {
-                    if (Words[i].Length > False_ending[j].Length)
-                    {
-                        if (Words[i].Substring(Words[i].Length - False_ending[j].Length) == False_ending[j])
-                        //при совпадении окончаний
-                        {
-                            flag = true;     //поднятие флага (другая часть речи)
-                            break;           // выход из итерации цикла
-                        }
-                    }
-                }
-                if (flag) continue;     //если данное слово не имеет ложного окончания
-                                        //окончание другой чатси речи
-                                        //проверка на прил в П.п(окончание ом ем и на наличие предлога перед проверяемым словом)
-
-                for (int j = 0; j < Ending_tvorit_padeg.Length; j++)
-                {//цикл по окончаниям прилагательных в П.п
-                    if (Words[i].Length > Ending_tvorit_padeg[j].Length)
-                    {
-                        if (Words[i].Substring(Words[i].Length - Ending_tvorit_padeg[j].Length) == Ending_tvorit_padeg[j])
-                        {// если данное слово оканчивается на ОМ или ЕМ
-                            for (byte k = 0; k < Consonants.Length; k++)
-                            {//и перед окончанием идет согласная
-                                if (Words[i].Substring(Words[i].Length - Ending_tvorit_padeg[j].Length - 1, 1) == Consonants[k])
-                                {//и перед словом идет один из придлогов П.п
-                                    if (i != 0)
-                                    {//если данное слово имеет нулевой номер перед ним не может стоять предлог
-                                        for (int u = 0; u < pretext.Length; u++)
-                                        {//цикл по всем предлогам П.п
-                                            if (Words[i - 1] == pretext[u])//ессли предыдущее слово предлог П.п
-                                            {
-                                                flag = true;    //поднятие флага (прил в П.п с предлогом)
-                                                break;          // выход из итерации цикла
-                                            }
-                                            else
-                                            {//иначе данное слово сущ в форме Тв.п. т.к. перед ним нет предлога П.п
-                                                Parts_of_speach[i] = "noun";    //данное слово сущ
-                                                flag = true;     //поднятие флага (сущ в Тв.п)
-                                                break;           // выход из итерации цикла
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {//иначе данное слово сущ в форме Тв.п. т.к. перед ним нет предлога П.п
-                                        Parts_of_speach[i] = "noun";    //данное слово сущ
-                                        flag = true;     //поднятие флага (сущ в Тв.п)
-                                        break;           // выход из итерации цикла
-                                    }
-                                }//конец проверки на предлог
-
-                            }
-
-                        }//конец проверки на ОМ ЕМ
-                    }
-                }//конец цикла по окончаниям прилагательных в П.п
-                if (flag) continue; //если флаг опущен то проверяем данное слово по окончаниям существительных
-                                    //т.к. не были выявлены др части речи или сущ в Тв.п.
-
-                for (int j = 0; j < ending.Length; j++)
-                {//цикл по окончаниям сущ
-                    if (Words[i].Length > ending[j].Length)
-                    {
-                        if (Words[i].Substring(Words[i].Length - ending[j].Length) == ending[j])
-                        {//если окончание слова совпадает с окончанием сущ
-                            Parts_of_speach[i] = "noun";    //данное слово сущ
-                            flag = true;
-                            break;           // выход из итерации цикла
-                        }
-                    }
-                }
+                    Word tempWord = wordList[elementNumber];
+                    tempWord = new Word(tempWord.word, "Существительное", tempWord.sentenceNumber, tempWord.wordAmount);
+                    wordList[elementNumber] = tempWord;
             }
         }
     }
     #endregion
-
-    #region Поиск ГЛАГОЛОВ
-    public static void findVerb()
-    {
-
-    }
-    #endregion
-
-    #region Поиск ПРИЧАСТИЙ
-    public static void Participle()
-    {
-        
-    }
-    #endregion
-
-    #region Поиск ДЕЕПРИЧАСТИЙ
-    public static void Deeprichastie()
-    {
-
-    }
-
-    #endregion
-    */
 
     #region Подсчёт количества слов
     /// <summary>
@@ -606,43 +816,50 @@ public class WordCalculator
     }
     #endregion
 
+    #region Вывод на экран
+    public static void writeOnScreen(String partOfSpeech)
+    {
+            for (var elementNumber = 0; elementNumber < wordList.Count; elementNumber++)
+            {
+                if (wordList[elementNumber].partOfSpeech == partOfSpeech)
+                {
+                    
+                }
+            }
+    }
+    #endregion
+
     #region Форматированная запись данных в файлы
     /// <summary>
     /// Запись осуществляется с помощью прохода по массиву частей речи,
     /// в нём находятся элементы "Прилагательное"
     /// и по их индексу выводятся элементы из массива слов
     /// </summary>
-    public static void writeInFiles()
+    public static void writeInFiles(String partOfSpeech)
     {
+        FileStream fileStream = new FileStream(FileHandler.OutputFilePath, FileMode.Append);
         // Запись в файл с минимальной ошибкой второго рода
-        using (StreamWriter outputFile = new StreamWriter(secondKindErrorFilePath))
-        {
+        StreamWriter outputFile = new StreamWriter(fileStream);
+
             outputFile.WriteLine("{0,-30} {1,5:N0}        {2,5:N0}", "Слово", "Количество", "Номера предложений");
-            outputFile.WriteLine("      ПРИЛАГАТЕЛЬНЫЕ");
+            outputFile.WriteLine("      " + partOfSpeech);
+            //String outStr = "      " + partOfSpeech + "\n";
             for (var elementNumber = 0; elementNumber < wordList.Count; elementNumber++)
             {
-                if (wordList[elementNumber].partOfSpeech == "Прилагательное")
+                if (wordList[elementNumber].partOfSpeech == partOfSpeech)
                 {
                     outputFile.WriteLine("{0,-30} {1,5:N0}             {2,-1:N0}",
                         wordList[elementNumber].word,
                         wordList[elementNumber].wordAmount,
                         wordList[elementNumber].sentenceNumber);
+
+                    //outStr = wordList[elementNumber].word + wordList[elementNumber].wordAmount + wordList[elementNumber].sentenceNumber + "\n";
                 }
             }
 
-            outputFile.WriteLine("{0,-30} {1,5:N0}        {2,5:N0}", "Слово", "Количество", "Номера предложений");
-            outputFile.WriteLine("      НАРЕЧИЯ");
-            for (var elementNumber = 0; elementNumber < wordList.Count; elementNumber++)
-            {
-                if (wordList[elementNumber].partOfSpeech == "Наречие")
-                {
-                    outputFile.WriteLine("{0,-30} {1,5:N0}             {2,-1:N0}",
-                        wordList[elementNumber].word,
-                        wordList[elementNumber].wordAmount,
-                        wordList[elementNumber].sentenceNumber);
-                }
-            }
-        }
+        outputFile.Close();
+
+        //Console.Write(outStr);
 
         /*// Запись в файл с минимальной ошибкой первого рода
         using (StreamWriter outputFile = new StreamWriter(firstKindErrorFilePath))

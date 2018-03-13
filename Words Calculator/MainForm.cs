@@ -8,7 +8,7 @@ namespace Words_Calculator
 {
     public partial class mainForm : Form
     {
-        
+
         public mainForm()
         {
             InitializeComponent();
@@ -21,8 +21,8 @@ namespace Words_Calculator
         /// <param name="e"></param>
         private void mainForm_Load(object sender, EventArgs e)
         {
-            grbPartsOfSpeech.Enabled = WordCalculator.IsOpenFile;
-            btnSearch.Enabled = WordCalculator.IsOpenFile;
+            grbPartsOfSpeech.Enabled = FileHandler.IsOpenInputFile;
+            btnSearch.Enabled = FileHandler.IsOpenInputFile;
         }
 
         /// <summary>
@@ -32,30 +32,62 @@ namespace Words_Calculator
         /// <param name="e"></param>
         private void btnSearch_Click(object sender, EventArgs e)
         {
+            if (FileHandler.IsOpenInputFile)
+                WordCalculator.readInputTextFile();
+            else if (tbInputText.Text != "")
+                WordCalculator.FileString = tbInputText.Text;
 
-            WordCalculator.readInputEndsFile();
+            WordCalculator.readSupportFile();
 
             WordCalculator.divideIntoSentences();
             
             WordCalculator.writeFileWithSentenceNumber();
             
             WordCalculator.divideIntoWords();
-            
-            if (chbAdjective.Checked == true)
-                WordCalculator.findAdjectivesWithMinFirstKindError();
 
-            //WordCalculator.findAdjectivesWithMinSecondKindError();
+            WordCalculator.findDictionary();
 
-            if (chbAdverb.Checked == true)
-                WordCalculator.findAdverb();
+            WordCalculator.findDeeprichastie();
+
+            WordCalculator.findAdverb();    
+
+            WordCalculator.findParticiple();
+
+            WordCalculator.findAdjectivesWithMinFirstKindError();
+
+            WordCalculator.findVerb();
+
+            WordCalculator.findNoun();
 
             WordCalculator.countWordAmount();
             
             WordCalculator.correctWordAmount();
 
             WordCalculator.sortOfWords();
-            
-            WordCalculator.writeInFiles();
+
+            if (FileHandler.IsOpenOutputFile)
+            {
+                if (chbAdjective.Checked == true)
+                    WordCalculator.writeInFiles("Прилагательное");
+
+                if (chbVerb.Checked == true)
+                    WordCalculator.writeInFiles("Глагол");
+
+                if (chbAdverb.Checked == true)
+                    WordCalculator.writeInFiles("Наречие");
+
+                if (chbParticiple.Checked == true)
+                    WordCalculator.writeInFiles("Причастие");
+
+                if (chbDeeprichastie.Checked == true)
+                    WordCalculator.writeInFiles("Деепричастие");
+
+                if (chbAnotherParts.Checked == true)
+                    WordCalculator.writeInFiles("Слова из словаря");
+
+                if (chbNoun.Checked == true)
+                    WordCalculator.writeInFiles("Существительное");
+            }
 
             WordCalculator.clearData();
         }
@@ -70,12 +102,24 @@ namespace Words_Calculator
                 chbDeeprichastie.Checked = chbAll.Checked;
         }
 
-        private void btnChoose_Click(object sender, EventArgs e)
+        private void btnChooseInputFile_Click(object sender, EventArgs e)
         {
-            WordCalculator.readInputTextFile();
-            grbPartsOfSpeech.Enabled = WordCalculator.IsOpenFile;
-            //grbOutputOptions.Enabled = WordCalculator.IsOpenFile;
-            btnSearch.Enabled = WordCalculator.IsOpenFile;
+            FileHandler.InputTextFilePath = FileHandler.PutFilePath();
+            tbInputFilePath.Text = FileHandler.InputTextFilePath;
+            grbPartsOfSpeech.Enabled = FileHandler.IsOpenInputFile;
+            btnSearch.Enabled = FileHandler.IsOpenInputFile;
+        }
+
+        private void btnClearTextBox_Click(object sender, EventArgs e)
+        {
+            tbInputText.Text = "";
+        }
+
+        private void btnChooseOutputFile_Click(object sender, EventArgs e)
+        {
+            FileHandler.OutputFilePath = FileHandler.PutFilePath();
+            tbOutputFilePath.Text = FileHandler.OutputFilePath;
+            FileHandler.IsOpenOutputFile = true;
         }
     }
 }
