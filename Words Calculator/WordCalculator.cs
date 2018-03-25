@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using System.Data;
 
 namespace Words_Calculator
 {
@@ -291,7 +292,7 @@ namespace Words_Calculator
         }
         #endregion
 
-        #region Поиск ПРИЛАГАТЕЛЬНЫХ с минимальной ошибкой второго рода
+        #region Поиск ПРИЛАГАТЕЛЬНЫХ
         /// <summary>
         /// Минимальной ошибкой второго рода будем называть ситуацию, 
         /// когда найдено максимально возможное количество прилагательных из текста.
@@ -819,30 +820,28 @@ namespace Words_Calculator
         }
         #endregion
 
-        #region Вывод на экран
-        public static void writeOnScreen(String partOfSpeech)
-        {
-            for (var elementNumber = 0; elementNumber < wordList.Count; elementNumber++)
-            {
-                if (wordList[elementNumber].partOfSpeech == partOfSpeech)
-                {
-
-                }
-            }
-        }
-        #endregion
-
         #region Форматированная запись данных в файлы
         /// <summary>
         /// Запись осуществляется с помощью прохода по массиву частей речи,
         /// в нём находятся элементы "Прилагательное"
         /// и по их индексу выводятся элементы из массива слов
         /// </summary>
-        public static void writeInFiles(String partOfSpeech, ref TextBox tbInputText)
+        public static void writeInFiles(String partOfSpeech)
         {
-            FileStream fileStream = new FileStream(FileHandler.OutputFilePath, FileMode.Append);
-            // Запись в файл с минимальной ошибкой второго рода
-            StreamWriter outputFile = new StreamWriter(fileStream);
+            StreamWriter outputFile;
+
+            if (FileHandler.IsEmptyOutputFile)
+            {
+                // Запись в файл с минимальной ошибкой второго рода
+                outputFile = new StreamWriter(FileHandler.OutputFilePath);
+                FileHandler.IsEmptyOutputFile = false;
+            }
+            else
+            {
+                FileStream fileStream = new FileStream(FileHandler.OutputFilePath, FileMode.Append);
+                // Запись в файл с минимальной ошибкой второго рода
+                outputFile = new StreamWriter(fileStream);
+            }
 
             outputFile.WriteLine("{0,-30} {1,5:N0}        {2,5:N0}", "Слово", "Количество", "Номера предложений");
             outputFile.WriteLine("      " + partOfSpeech);
@@ -859,30 +858,6 @@ namespace Words_Calculator
             }
 
             outputFile.Close();
-
-            //Console.Write(outStr);
-
-            /*// Запись в файл с минимальной ошибкой первого рода
-            using (StreamWriter outputFile = new StreamWriter(firstKindErrorFilePath))
-            {
-                outputFile.WriteLine("{0,-30} {1,5:N0}        {2,5:N0}", "Слово", "Количество", "Номера предложений");
-                outputFile.WriteLine("      ПРИЛАГАТЕЛЬНЫЕ");
-                for (int listOfWordsFromFileElement = 0; listOfWordsFromFileElement < wordList.Count; listOfWordsFromFileElement++)
-                {
-                    for (int listOfAdjectivesWithFirstTypeErrorElement = 0; listOfAdjectivesWithFirstTypeErrorElement < listOfAdjectivesWithFirstTypeError.Count; listOfAdjectivesWithFirstTypeErrorElement++)
-                    {
-                        if (listOfAdjectivesWithFirstTypeError[listOfAdjectivesWithFirstTypeErrorElement]
-                            == wordList[listOfWordsFromFileElement].word)
-                        {
-                            outputFile.WriteLine("{0,-30} {1,5:N0}             {2,-10:N0}",
-                                wordList[listOfWordsFromFileElement].word,
-                                wordList[listOfWordsFromFileElement].wordAmount,
-                                wordList[listOfWordsFromFileElement].sentenceNumber);
-                            break;
-                        }
-                    }
-                }
-            }*/
         }
         #endregion
 
@@ -895,5 +870,70 @@ namespace Words_Calculator
         }
         #endregion
 
+        #region Инициализация таблицы
+        /// <summary>
+        /// Инициализация таблицы.
+        /// </summary>
+        /// <param name="dataGridView"></param>
+        /// <param name="table"></param>
+        public static void InitGrid(ref DataGridView dataGridView, ref DataTable table)
+        {
+            table.Columns.Add("Слово", typeof(string));
+            table.Columns.Add("Количество", typeof(int));
+            dataGridView.RowHeadersVisible = false;
+            dataGridView.ColumnHeadersVisible = false;
+        }
+        #endregion
+
+        #region Заполнение таблицы
+        /// <summary>
+        /// Заполнение таблицы.
+        /// </summary>
+        /// <param name="partOfSpeech"></param>
+        /// <param name="dataGridView"></param>
+        /// <param name="table"></param>
+        public static void FillGrid(String partOfSpeech, ref DataGridView dataGridView, ref DataTable table)
+        {
+            table.Rows.Add(partOfSpeech, null);
+            int tableSize = table.Rows.Count;
+            foreach (Word s in wordList)
+            {
+                if (s.partOfSpeech == partOfSpeech)
+                {
+                    table.Rows.Add(s.word, s.wordAmount);
+                }
+            }
+            dataGridView.DataSource = table;
+        }
+        #endregion
+
+        #region Вывод предложений для выбранного в таблице слова на экран
+        /// <summary>
+        /// Вывод предложений для выбранного в таблице слова на экран.
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="partOfSpeech"></param>
+        /// <param name="tbSentences"></param>
+        public static void PutSentencesForWord(String word, String partOfSpeech, ref TextBox tbSentences)
+        {
+            String outputString = "";
+            for (var wordNumber = 0; wordNumber < wordList.Count; wordNumber++)
+            {
+                if (wordList[wordNumber].word == word)
+                {
+                    String[] stringSentencesNumber = wordList[wordNumber].sentenceNumber.Split(',');
+
+                    for (var sentenceNumberIndex = 0; sentenceNumberIndex < stringSentencesNumber.Length; sentenceNumberIndex++)
+                    {
+                        int tmp = Convert.ToInt32(stringSentencesNumber[sentenceNumberIndex]);
+                        outputString += listOfSentences[tmp - 1];
+                        outputString += ".\r\n\r\n";
+                        Console.WriteLine(outputString);
+                    }
+                }
+            }
+            tbSentences.Text = outputString;
+        }
+        #endregion
     }
 }

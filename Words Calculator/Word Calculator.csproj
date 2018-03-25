@@ -80,5 +80,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="InputSupportFile.txt" />
+    <Content Include="InputTextFile.txt" />
+    <Content Include="SecondKindErrorOutputFile.txt" />
+    <Content Include="SentencesWithNumberOutputFile.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

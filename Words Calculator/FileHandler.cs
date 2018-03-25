@@ -12,13 +12,13 @@ namespace Words_Calculator
         // Путь к входному файлу с текстом.
         private static String inputTextFilePath = @"";
         // Путь к входному вспомогательному файлу.
-        private const String inputSupportFilePath = @"D:\Langs\C#\WordCalculator\InputSupportFile.txt";
+        private const String inputSupportFilePath = @"InputSupportFile.txt";
         // Путь к выходному файлу c ошибкой второго рода.
         private static String outputFilePath = @"";
         // Путь к выходному файлу с ошибкой первого рода.
         //private const String firstKindErrorFilePath = @"D:\Langs\C#\WordCalculator\FirstKindErrorOutputFile.txt";
         // Путь к выходному файлу с пронумерованными предложениями.
-        private const String sentencesWithNumberFilePath = @"D:\Langs\C#\WordCalculator\SentencesWithNumberOutputFile.txt";
+        private const String sentencesWithNumberFilePath = @"SentencesWithNumberOutputFile.txt";
         // Начальная директория для открытия файла
         private const String startDirectory = @"D:\Langs\C#";
         // Фильтр, чтобы можно было открывать только текстовые файлы
@@ -28,6 +28,8 @@ namespace Words_Calculator
         private static bool isOpenInputFile = false;
         // Наличие открытого входного файла
         private static bool isOpenOutputFile = false;
+
+        private static bool isEmptyOutputFile = true;
 
         public static bool IsOpenInputFile
         {
@@ -59,6 +61,7 @@ namespace Words_Calculator
         public static string Filter => filter;
 
         public static string OutputFilePath { get => outputFilePath; set => outputFilePath = value; }
+        public static bool IsEmptyOutputFile { get => isEmptyOutputFile; set => isEmptyOutputFile = value; }
 
         public static String PutFilePath()
         {

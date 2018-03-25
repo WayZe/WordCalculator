@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Data;
 
 /// <summary>
 /// Осуществляет работу с событиями.
@@ -9,8 +10,7 @@ namespace Words_Calculator
 
     public partial class mainForm : Form
     {
-        // Переменная, показывающая откуда идет чтение, может иметь три значения: "file", "screen" и "".
-        String readingFrom;
+        private DataTable table = new DataTable();
 
         public mainForm()
         {
@@ -24,8 +24,25 @@ namespace Words_Calculator
         /// <param name="e"></param>
         private void mainForm_Load(object sender, EventArgs e)
         {
-            grbPartsOfSpeech.Enabled = FileHandler.IsOpenInputFile;
             btnSearch.Enabled = FileHandler.IsOpenInputFile;
+
+            WordCalculator.readSupportFile();
+
+            cmbPartsOfSpeech.Items.Add("Имя существительное");
+            cmbPartsOfSpeech.Items.Add("Имя прилагательное");
+            cmbPartsOfSpeech.Items.Add("Глагол");
+            cmbPartsOfSpeech.Items.Add("Наречие");
+            cmbPartsOfSpeech.Items.Add("Причастие");
+            cmbPartsOfSpeech.Items.Add("Деепричастие");
+
+            WordCalculator.InitGrid(ref dgrvFoundWords, ref table);
+        }
+
+        public void Clear(DataGridView dataGridView)
+        {
+            while (dataGridView.Rows.Count > 1)
+                for (int i = 0; i < dataGridView.Rows.Count - 1; i++)
+                    dataGridView.Rows.Remove(dataGridView.Rows[i]);
         }
 
         /// <summary>
@@ -35,12 +52,10 @@ namespace Words_Calculator
         /// <param name="e"></param>
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            if (FileHandler.IsOpenInputFile)
-                WordCalculator.readInputTextFile();
-            else if (tbInputText.Text != "")
-                WordCalculator.FileString = tbInputText.Text;
 
-            WordCalculator.readSupportFile();
+            Clear(dgrvFoundWords);
+
+            WordCalculator.clearData();
 
             WordCalculator.divideIntoSentences();
             
@@ -68,54 +83,81 @@ namespace Words_Calculator
 
             WordCalculator.sortOfWords();
 
+            // Вывод в файл.
             if (FileHandler.IsOpenOutputFile)
             {
-                if (chbAdjective.Checked == true)
-                    WordCalculator.writeInFiles("Прилагательное", ref tbInputText);
-
-                if (chbVerb.Checked == true)
-                    WordCalculator.writeInFiles("Глагол", ref tbInputText);
-
-                if (chbAdverb.Checked == true)
-                    WordCalculator.writeInFiles("Наречие", ref tbInputText);
-
-                if (chbParticiple.Checked == true)
-                    WordCalculator.writeInFiles("Причастие", ref tbInputText);
-
-                if (chbDeeprichastie.Checked == true)
-                    WordCalculator.writeInFiles("Деепричастие", ref tbInputText);
-
-                if (chbAnotherParts.Checked == true)
-                    WordCalculator.writeInFiles("Слова из словаря", ref tbInputText);
-
-                if (chbNoun.Checked == true)
-                    WordCalculator.writeInFiles("Существительное", ref tbInputText);
+                switch (cmbPartsOfSpeech.SelectedIndex)
+                {
+                    case 0:
+                        WordCalculator.writeInFiles("Существительное");
+                        break;
+                    case 1:
+                        WordCalculator.writeInFiles("Прилагательное");
+                        break;
+                    case 2:
+                        WordCalculator.writeInFiles("Глагол");
+                        break;
+                    case 3:
+                        WordCalculator.writeInFiles("Наречие");
+                        break;
+                    case 4:
+                        WordCalculator.writeInFiles("Причастие");
+                        break;
+                    case 5:
+                        WordCalculator.writeInFiles("Деепричастие");
+                        break;
+                    default:
+                        Console.WriteLine("Default case");
+                        break;
+                }
+            }
+            
+            // Заполнение таблицы.
+            switch (cmbPartsOfSpeech.SelectedIndex)
+            {
+                case 0:
+                    WordCalculator.FillGrid("Существительное", ref dgrvFoundWords, ref table);
+                    break;
+                case 1:
+                    WordCalculator.FillGrid("Прилагательное", ref dgrvFoundWords, ref table);
+                    break;
+                case 2:
+                    WordCalculator.FillGrid("Глагол", ref dgrvFoundWords, ref table);
+                    break;
+                case 3:
+                    WordCalculator.FillGrid("Наречие", ref dgrvFoundWords, ref table);
+                    break;
+                case 4:
+                    WordCalculator.FillGrid("Причастие", ref dgrvFoundWords, ref table);
+                    break;
+                case 5:
+                    WordCalculator.FillGrid("Деепричастие", ref dgrvFoundWords, ref table);
+                    break;
+                default:
+                    WordCalculator.FillGrid("Существительное", ref dgrvFoundWords, ref table);
+                    WordCalculator.FillGrid("Прилагательное", ref dgrvFoundWords, ref table);
+                    WordCalculator.FillGrid("Глагол", ref dgrvFoundWords, ref table);
+                    WordCalculator.FillGrid("Наречие", ref dgrvFoundWords, ref table);
+                    WordCalculator.FillGrid("Причастие", ref dgrvFoundWords, ref table);
+                    WordCalculator.FillGrid("Деепричастие", ref dgrvFoundWords, ref table);
+                    break;
             }
 
-            WordCalculator.clearData();
-        }
+            if (this.Width < 700)
+                this.Width += 550;
 
-        private void chbAll_CheckedChanged(object sender, EventArgs e)
-        {
-                chbNoun.Checked = chbAll.Checked;
-                chbAdjective.Checked = chbAll.Checked;
-                chbVerb.Checked = chbAll.Checked;
-                chbAdverb.Checked = chbAll.Checked;
-                chbParticiple.Checked = chbAll.Checked;
-                chbDeeprichastie.Checked = chbAll.Checked;
+            FileHandler.IsEmptyOutputFile = true;
+
         }
 
         private void btnChooseInputFile_Click(object sender, EventArgs e)
         {
+            // Получение пути к входному файлу
             FileHandler.InputTextFilePath = FileHandler.PutFilePath();
+            // Вывод пути к входному файлу на экран в TextBox
             tbInputFilePath.Text = FileHandler.InputTextFilePath;
-            grbPartsOfSpeech.Enabled = FileHandler.IsOpenInputFile;
-            btnSearch.Enabled = FileHandler.IsOpenInputFile;
-        }
-
-        private void btnClearTextBox_Click(object sender, EventArgs e)
-        {
-            tbInputText.Text = "";
+            WordCalculator.readInputTextFile();
+            tbInputText.Text = WordCalculator.FileString;
         }
 
         private void btnChooseOutputFile_Click(object sender, EventArgs e)
@@ -127,33 +169,41 @@ namespace Words_Calculator
 
         private void tbInputText_TextChanged(object sender, EventArgs e)
         {
+            // Если в Textbox отсутствует текст, то кнопка "Анализ" блокируется, иначе - нет
             if (tbInputText.Text == "")
-                readingFrom = "";
+            {
+                btnSearch.Enabled = false;
+            }
             else
-                readingFrom = "screen";
-
-            SelectInputMethod();
+            {
+                btnSearch.Enabled = true;
+            }
         }
 
-        private void SelectInputMethod()
+        private void btnClearInputTextBox_Click_1(object sender, EventArgs e)
         {
-            if (readingFrom == "")
-            {
-                tbInputText.Enabled = true;
-                btnChooseInputFile.Enabled = true;
-            }
-            else if (readingFrom == "file")
-            {
-                tbInputText.Enabled = false;
-                btnChooseInputFile.Enabled = true;
-            }
-            else if (readingFrom == "screen")
-            {
-                tbInputText.Enabled = false;
-                btnChooseInputFile.Enabled = true;
-            }
+            DialogResult result = MessageBox.Show("Вы уверены, что хотите очистить всё?", "Предупреждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
+            if (result == DialogResult.Yes) //Если нажал Да
+            {
+                tbInputText.Text = "";
+                FileHandler.InputTextFilePath = "";
+                tbInputFilePath.Text = FileHandler.InputTextFilePath;
+                Clear(dgrvFoundWords);
+                WordCalculator.FileString = "";
+                WordCalculator.clearData();
+                if (this.Width > 700)
+                    this.Width -= 550;
+            }
+            
+        }
 
+        private void drwvFoundWords_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int selectedCellIndex = dgrvFoundWords.CurrentCell.RowIndex;
+            String selectedCellText = dgrvFoundWords.CurrentRow.Cells[0].Value.ToString();
+            Console.WriteLine(selectedCellText);
+            WordCalculator.PutSentencesForWord(selectedCellText, "Прилагательное", ref tbSentences);
         }
     }
 }
