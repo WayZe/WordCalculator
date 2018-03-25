@@ -185,6 +185,7 @@
             this.tbInputText.Name = "tbInputText";
             this.tbInputText.Size = new System.Drawing.Size(390, 173);
             this.tbInputText.TabIndex = 17;
+            this.tbInputText.TextChanged += new System.EventHandler(this.tbInputText_TextChanged);
             // 
             // grbFileWork
             // 
@@ -269,7 +270,7 @@
         private System.Windows.Forms.GroupBox grbPartsOfSpeech;
         private System.Windows.Forms.CheckBox chbAnotherParts;
         private System.Windows.Forms.Button btnStatistics;
-        public System.Windows.Forms.TextBox tbInputText;
+        private System.Windows.Forms.TextBox tbInputText;
         private System.Windows.Forms.GroupBox grbFileWork;
         private System.Windows.Forms.TextBox tbOutputFilePath;
         private System.Windows.Forms.TextBox tbInputFilePath;

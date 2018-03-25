@@ -2,12 +2,15 @@
 using System.Windows.Forms;
 
 /// <summary>
-/// Осуществляет работу с событиями
+/// Осуществляет работу с событиями.
 /// </summary>
 namespace Words_Calculator
 {
+
     public partial class mainForm : Form
     {
+        // Переменная, показывающая откуда идет чтение, может иметь три значения: "file", "screen" и "".
+        String readingFrom;
 
         public mainForm()
         {
@@ -15,7 +18,7 @@ namespace Words_Calculator
         }
 
         /// <summary>
-        /// Загрузка формы
+        /// Загрузка формы.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -26,7 +29,7 @@ namespace Words_Calculator
         }
 
         /// <summary>
-        /// Нажатие кнопки "Анализ"
+        /// Нажатие кнопки "Анализ".
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -68,25 +71,25 @@ namespace Words_Calculator
             if (FileHandler.IsOpenOutputFile)
             {
                 if (chbAdjective.Checked == true)
-                    WordCalculator.writeInFiles("Прилагательное");
+                    WordCalculator.writeInFiles("Прилагательное", ref tbInputText);
 
                 if (chbVerb.Checked == true)
-                    WordCalculator.writeInFiles("Глагол");
+                    WordCalculator.writeInFiles("Глагол", ref tbInputText);
 
                 if (chbAdverb.Checked == true)
-                    WordCalculator.writeInFiles("Наречие");
+                    WordCalculator.writeInFiles("Наречие", ref tbInputText);
 
                 if (chbParticiple.Checked == true)
-                    WordCalculator.writeInFiles("Причастие");
+                    WordCalculator.writeInFiles("Причастие", ref tbInputText);
 
                 if (chbDeeprichastie.Checked == true)
-                    WordCalculator.writeInFiles("Деепричастие");
+                    WordCalculator.writeInFiles("Деепричастие", ref tbInputText);
 
                 if (chbAnotherParts.Checked == true)
-                    WordCalculator.writeInFiles("Слова из словаря");
+                    WordCalculator.writeInFiles("Слова из словаря", ref tbInputText);
 
                 if (chbNoun.Checked == true)
-                    WordCalculator.writeInFiles("Существительное");
+                    WordCalculator.writeInFiles("Существительное", ref tbInputText);
             }
 
             WordCalculator.clearData();
@@ -120,6 +123,37 @@ namespace Words_Calculator
             FileHandler.OutputFilePath = FileHandler.PutFilePath();
             tbOutputFilePath.Text = FileHandler.OutputFilePath;
             FileHandler.IsOpenOutputFile = true;
+        }
+
+        private void tbInputText_TextChanged(object sender, EventArgs e)
+        {
+            if (tbInputText.Text == "")
+                readingFrom = "";
+            else
+                readingFrom = "screen";
+
+            SelectInputMethod();
+        }
+
+        private void SelectInputMethod()
+        {
+            if (readingFrom == "")
+            {
+                tbInputText.Enabled = true;
+                btnChooseInputFile.Enabled = true;
+            }
+            else if (readingFrom == "file")
+            {
+                tbInputText.Enabled = false;
+                btnChooseInputFile.Enabled = true;
+            }
+            else if (readingFrom == "screen")
+            {
+                tbInputText.Enabled = false;
+                btnChooseInputFile.Enabled = true;
+            }
+
+
         }
     }
 }
