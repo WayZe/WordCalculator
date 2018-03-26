@@ -132,12 +132,12 @@
             this.btnClearInputTextBox.TabIndex = 20;
             this.btnClearInputTextBox.Text = "Очистить";
             this.btnClearInputTextBox.UseVisualStyleBackColor = true;
-            this.btnClearInputTextBox.Click += new System.EventHandler(this.btnClearInputTextBox_Click_1);
+            this.btnClearInputTextBox.Click += new System.EventHandler(this.btnClearInputTextBox_Click);
             // 
             // dgrvFoundWords
             // 
             this.dgrvFoundWords.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgrvFoundWords.Location = new System.Drawing.Point(705, 57);
+            this.dgrvFoundWords.Location = new System.Drawing.Point(711, 57);
             this.dgrvFoundWords.Name = "dgrvFoundWords";
             this.dgrvFoundWords.Size = new System.Drawing.Size(220, 398);
             this.dgrvFoundWords.TabIndex = 21;
@@ -146,7 +146,7 @@
             // lblFoundWords
             // 
             this.lblFoundWords.AutoSize = true;
-            this.lblFoundWords.Location = new System.Drawing.Point(702, 29);
+            this.lblFoundWords.Location = new System.Drawing.Point(708, 29);
             this.lblFoundWords.Name = "lblFoundWords";
             this.lblFoundWords.Size = new System.Drawing.Size(101, 13);
             this.lblFoundWords.TabIndex = 22;
@@ -175,7 +175,7 @@
             this.tbSentences.Location = new System.Drawing.Point(961, 57);
             this.tbSentences.Multiline = true;
             this.tbSentences.Name = "tbSentences";
-            this.tbSentences.Size = new System.Drawing.Size(206, 398);
+            this.tbSentences.Size = new System.Drawing.Size(206, 308);
             this.tbSentences.TabIndex = 25;
             this.tbSentences.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -192,7 +192,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(672, 470);
+            this.ClientSize = new System.Drawing.Size(1197, 470);
             this.Controls.Add(this.lblSentences);
             this.Controls.Add(this.tbSentences);
             this.Controls.Add(this.label1);

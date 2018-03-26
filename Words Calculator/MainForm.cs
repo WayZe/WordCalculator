@@ -52,7 +52,7 @@ namespace Words_Calculator
         /// <param name="e"></param>
         private void btnSearch_Click(object sender, EventArgs e)
         {
-
+            // Очистка таблицы.
             Clear(dgrvFoundWords);
 
             WordCalculator.clearData();
@@ -107,7 +107,12 @@ namespace Words_Calculator
                         WordCalculator.writeInFiles("Деепричастие");
                         break;
                     default:
-                        Console.WriteLine("Default case");
+                        WordCalculator.writeInFiles("Существительное");
+                        WordCalculator.writeInFiles("Прилагательное");
+                        WordCalculator.writeInFiles("Глагол");
+                        WordCalculator.writeInFiles("Наречие");
+                        WordCalculator.writeInFiles("Причастие");
+                        WordCalculator.writeInFiles("Деепричастие");
                         break;
                 }
             }
@@ -143,6 +148,7 @@ namespace Words_Calculator
                     break;
             }
 
+            // СОРРЕ ЗА КОСТЫЛИ.
             if (this.Width < 700)
                 this.Width += 550;
 
@@ -150,26 +156,46 @@ namespace Words_Calculator
 
         }
 
+        /// <summary>
+        /// Обработчик события клика по кнопке "Выбрать входной файл".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnChooseInputFile_Click(object sender, EventArgs e)
         {
-            // Получение пути к входному файлу
+            // Получение пути к входному файлу.
             FileHandler.InputTextFilePath = FileHandler.PutFilePath();
-            // Вывод пути к входному файлу на экран в TextBox
+            // Вывод пути к входному файлу на экран в TextBox.
             tbInputFilePath.Text = FileHandler.InputTextFilePath;
+            // Чтение входного файла.
             WordCalculator.readInputTextFile();
+            // Вывод пути к входному файлу в TextBox.
             tbInputText.Text = WordCalculator.FileString;
         }
 
+        /// <summary>
+        /// Обработчик события клика по кнопке "Выбрать выходной файл".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnChooseOutputFile_Click(object sender, EventArgs e)
         {
+            // Получение пути к входному файлу.
             FileHandler.OutputFilePath = FileHandler.PutFilePath();
+            // Вывод пути к выходному файлу в TextBox.
             tbOutputFilePath.Text = FileHandler.OutputFilePath;
+            // Поднятия флага о том, что есть открытый выходной файл.
             FileHandler.IsOpenOutputFile = true;
         }
 
+        /// <summary>
+        /// Обработчик события изменения Textbox с входным текстом.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tbInputText_TextChanged(object sender, EventArgs e)
         {
-            // Если в Textbox отсутствует текст, то кнопка "Анализ" блокируется, иначе - нет
+            // Если в Textbox отсутствует текст, то кнопка "Анализ" блокируется, иначе - нет.
             if (tbInputText.Text == "")
             {
                 btnSearch.Enabled = false;
@@ -180,11 +206,28 @@ namespace Words_Calculator
             }
         }
 
-        private void btnClearInputTextBox_Click_1(object sender, EventArgs e)
+        /// <summary>
+        /// Обработчик события клика по ячейке таблицы.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void drwvFoundWords_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            DialogResult result = MessageBox.Show("Вы уверены, что хотите очистить всё?", "Предупреждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            String selectedCellText = dgrvFoundWords.CurrentRow.Cells[0].Value.ToString();
+            WordCalculator.PutSentencesForWord(selectedCellText, ref tbSentences);
+        }
 
-            if (result == DialogResult.Yes) //Если нажал Да
+        /// <summary>
+        /// Обработчик события клика по кнопке "Очистить".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnClearInputTextBox_Click(object sender, EventArgs e)
+        {
+            // Вывод окна предупреждения об очистке данных.
+            DialogResult result = MessageBox.Show("Вы уверены, что хотите очистить ВСЁ?", "Предупреждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            //Если нажал "Да".
+            if (result == DialogResult.Yes) 
             {
                 tbInputText.Text = "";
                 FileHandler.InputTextFilePath = "";
@@ -195,15 +238,6 @@ namespace Words_Calculator
                 if (this.Width > 700)
                     this.Width -= 550;
             }
-            
-        }
-
-        private void drwvFoundWords_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            int selectedCellIndex = dgrvFoundWords.CurrentCell.RowIndex;
-            String selectedCellText = dgrvFoundWords.CurrentRow.Cells[0].Value.ToString();
-            Console.WriteLine(selectedCellText);
-            WordCalculator.PutSentencesForWord(selectedCellText, "Прилагательное", ref tbSentences);
         }
     }
 }

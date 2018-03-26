@@ -9,7 +9,7 @@ using System.Data;
 namespace Words_Calculator
 {
     /// <summary>
-    /// Осуществляет работу с частями речи(прилагательными).
+    /// Осуществляет работу с частями речи.
     /// </summary>
     public class WordCalculator
     {
@@ -18,15 +18,16 @@ namespace Words_Calculator
 
         // Текст файла.
         private static String fileString;
+        public static string FileString { get => fileString; set => fileString = value; }
 
         ///РАЗДЕЛИТЕЛИ
-        // Разделитель в вспомогательном файле
+        // Разделитель в вспомогательном файле.
         private const char supportSeparator = ' ';
-        // Разделитель для номеров предложений
+        // Разделитель для номеров предложений.
         private const char sentenceNumberSeparator = ',';
-        // Массив знаков-разделителей для предложений
+        // Массив знаков-разделителей для предложений.
         private static readonly char[] sentenceSeparatorsArray = { '!', '?', '.' };
-        // Массив знаков-разделителей на слова
+        // Массив знаков-разделителей на слова.
         private static char[] wordSeparatorsArray = { ' ',  ';',  ',',  ':',
                                                   '(',  ')',  '\\', '\"',
                                                   '\'', '\n', '\t', '\v', '\r' };
@@ -35,13 +36,13 @@ namespace Words_Calculator
 
         struct Word
         {
-            // Слово
+            // Слово.
             public String word;
-            // Часть речи
+            // Часть речи.
             public String partOfSpeech;
-            // Номера предложений, в которых встречалось слово
+            // Номера предложений, в которых встречалось слово.
             public String sentenceNumber;
-            // Сколько раз слово встречается в тексте
+            // Сколько раз слово встречается в тексте.
             public int wordAmount;
 
             public Word(String _word, String _partOfSpeech, String _sentenceNumber, int _wordAmount)
@@ -54,58 +55,54 @@ namespace Words_Calculator
 
         };
 
-        // Список слов
+        // Список слов.
         private static List<Word> wordList = new List<Word>();
 
         ///ВСПОМОГАТЕЛЬНЫЕ СПИСКИ
-        // Список найденных прилагательных с ошибкой первого рода
+        // Список найденных прилагательных с ошибкой первого рода.
         private static List<String> listOfAdjectivesWithFirstTypeError = new List<String>();
-        // Список предложений из текста
+        // Список предложений из текста.
         private static List<String> listOfSentences = new List<String>();
 
         ///ВСПОМОГАТЕЛЬНЫЕ МАССИВЫ
-        // Массив окончаний ПРИЛАГАТЕЛЬНЫХ
+        // Массив окончаний ПРИЛАГАТЕЛЬНЫХ.
         private static String[] arrayOfAdjectiveEnds;
-        // Массив суффиксов ПРИЛАГАТЕЛЬНЫХ
+        // Массив суффиксов ПРИЛАГАТЕЛЬНЫХ.
         private static String[] arrayOfAdjectiveSuffixes;
-        // Массив суффиксов ГЛАГОЛОВ 
+        // Массив суффиксов ГЛАГОЛОВ.
         private static String[] arrayOfVerbSuffixes;
-        // Массив окончаний ГЛАГОЛОВ 
+        // Массив окончаний ГЛАГОЛОВ.
         private static String[] arrayOfVerbEnds;
-        // Массив окончаний НАРЕЧИЙ
+        // Массив окончаний НАРЕЧИЙ.
         private static String[] arrayOfAdverbEnds;
-        // Массив начал НАРЕЧИЙ
+        // Массив начал НАРЕЧИЙ.
         private static String[] arrayOfAdverbStarts;
-        // Массив словарных НАРЕЧИЙ
+        // Массив словарных НАРЕЧИЙ.
         private static String[] arrayOfDictionaryAdverbs;
-        //Массив суффиксов ПРИЧАСТИЙ
+        //Массив суффиксов ПРИЧАСТИЙ.
         private static String[] arrayOfParticipleSuffixes;
-        //Массив окончаний ПРИЧАСТИЙ
+        //Массив окончаний ПРИЧАСТИЙ.
         private static String[] arrayOfParticipleEndings;
-        //Массив постфиксов ПРИЧАСТИЙ
+        //Массив постфиксов ПРИЧАСТИЙ.
         private static String[] arrayOfParticiplePostfixes;
-        //Массив суффиксов ДЕЕПРИЧАСТИЙ
+        //Массив суффиксов ДЕЕПРИЧАСТИЙ.
         private static String[] arrayOfDeeprSuffixes;
-        // Массив начал ЧИСЛИТЕЛЬНЫХ
+        // Массив начал ЧИСЛИТЕЛЬНЫХ.
         private static String[] arrayOfNumeralStarts;
-        // Массив окончаний ЧИСЛИТЕЛЬНЫХ
+        // Массив окончаний ЧИСЛИТЕЛЬНЫХ.
         private static String[] arrayOfNumeralEnds;
-        // Массив словарных ЧИСЛИТЕЛЬНЫХ
+        // Массив словарных ЧИСЛИТЕЛЬНЫХ.
         private static String[] arrayOfDictionaryNumerals;
-        // Массив словарных МЕСТОИМЕНИЙ
+        // Массив словарных МЕСТОИМЕНИЙ.
         private static String[] arrayOfDictionaryPronouns;
-        // Массив словарных СОЮЗОВ
+        // Массив словарных СОЮЗОВ.
         private static String[] arrayOfDictionaryUnions;
-        // Массив словарных ПРЕДЛОГОВ
+        // Массив словарных ПРЕДЛОГОВ.
         private static String[] arrayOfDictionaryPrepositions;
-        // Массив словарных ЧАСТИЦ
+        // Массив словарных ЧАСТИЦ.
         private static String[] arrayOfDictionaryParticles;
-        // Массив словарных МЕЖДОМЕТИЙ
+        // Массив словарных МЕЖДОМЕТИЙ.
         private static String[] arrayOfDictionaryInterjections;
-
-        public static string FileString { get => fileString; set => fileString = value; }
-
-
 
         #endregion
 
@@ -914,7 +911,7 @@ namespace Words_Calculator
         /// <param name="word"></param>
         /// <param name="partOfSpeech"></param>
         /// <param name="tbSentences"></param>
-        public static void PutSentencesForWord(String word, String partOfSpeech, ref TextBox tbSentences)
+        public static void PutSentencesForWord(String word, ref TextBox tbSentences)
         {
             String outputString = "";
             for (var wordNumber = 0; wordNumber < wordList.Count; wordNumber++)
