@@ -24,7 +24,7 @@ namespace Words_Calculator
         /// <param name="e"></param>
         private void mainForm_Load(object sender, EventArgs e)
         {
-            btnSearch.Enabled = FileHandler.IsOpenInputFile;
+            btnSearch.Enabled = false;
 
             WordCalculator.readSupportFile();
 
@@ -52,10 +52,18 @@ namespace Words_Calculator
         /// <param name="e"></param>
         private void btnSearch_Click(object sender, EventArgs e)
         {
+
+            //if (!FileHandler.IsOpenInputFile)
+            //{
+            //    WordCalculator.FileString = tbInputText.Text;
+            //}
+
             // Очистка таблицы.
             Clear(dgrvFoundWords);
 
             WordCalculator.clearData();
+
+            WordCalculator.FileString = tbInputText.Text;
 
             WordCalculator.divideIntoSentences();
             
@@ -63,9 +71,9 @@ namespace Words_Calculator
             
             WordCalculator.divideIntoWords();
 
-            WordCalculator.findDictionary();
+           // WordCalculator.findDictionary();
 
-            WordCalculator.findDeeprichastie();
+            //WordCalculator.findDeeprichastie();
 
             WordCalculator.findAdverb();    
 
@@ -153,6 +161,7 @@ namespace Words_Calculator
                 this.Width += 550;
 
             FileHandler.IsEmptyOutputFile = true;
+            //FileHandler.IsOpenInputFile = false;
 
         }
 
@@ -168,9 +177,7 @@ namespace Words_Calculator
             // Вывод пути к входному файлу на экран в TextBox.
             tbInputFilePath.Text = FileHandler.InputTextFilePath;
             // Чтение входного файла.
-            WordCalculator.readInputTextFile();
-            // Вывод пути к входному файлу в TextBox.
-            tbInputText.Text = WordCalculator.FileString;
+            WordCalculator.readInputTextFile(ref tbInputText);
         }
 
         /// <summary>

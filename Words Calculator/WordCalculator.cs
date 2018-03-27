@@ -110,13 +110,12 @@ namespace Words_Calculator
         /// <summary>
         /// Чтение текста из файла в строку
         /// </summary>
-        public static void readInputTextFile()
+        public static void readInputTextFile(ref TextBox tbInputText)
         {
             StreamReader streamReader = new StreamReader(File.OpenRead(FileHandler.InputTextFilePath), Encoding.GetEncoding(1251));
             using (streamReader)
             {
-                FileString = streamReader.ReadToEnd();
-                Console.WriteLine(FileString);
+                tbInputText.Text = streamReader.ReadToEnd();
             }
         }
         #endregion
@@ -148,7 +147,6 @@ namespace Words_Calculator
                     // Инициализация списка окончаний ГЛАГОЛОВ 
                     tmpString = streamReader.ReadLine();
                     arrayOfVerbEnds = tmpString.Split(supportSeparator);
-                    tmpString = streamReader.ReadLine();
 
 
                     tmpString = streamReader.ReadLine();
@@ -389,6 +387,11 @@ namespace Words_Calculator
         #region Поиск НАРЕЧИЙ
         public static void findAdverb()
         {
+            for (var i = 0; i <arrayOfAdverbEnds.Length; i++)
+            {
+                Console.WriteLine(arrayOfAdverbEnds[i]);
+            }
+
             for (var elementNumber = 0; elementNumber < wordList.Count; elementNumber++)
             {
                 String currentWord = wordList.ElementAt(elementNumber).word;

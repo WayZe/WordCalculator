@@ -31,25 +31,6 @@ namespace Words_Calculator
         public static string Filter => filter;
 
         // Наличие открытого входного файла.
-        private static bool isOpenInputFile = false;
-        public static bool IsOpenInputFile
-        {
-            get
-            {
-                if (InputTextFilePath != "")
-                {
-                    isOpenInputFile = true;
-                }
-                else
-                {
-                    isOpenInputFile = false;
-                }
-
-                return isOpenInputFile;
-            }
-        }
-
-        // Наличие открытого входного файла.
         private static bool isOpenOutputFile = false;
         public static bool IsOpenOutputFile { get => isOpenOutputFile; set => isOpenOutputFile = value; }
 
