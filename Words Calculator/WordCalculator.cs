@@ -20,6 +20,10 @@ namespace Words_Calculator
         private static String fileString;
         public static string FileString { get => fileString; set => fileString = value; }
 
+        // Счетчик одной части речи.
+        private static int count = 0;
+        public static int Count { get => count; set => count = value; }
+
         ///РАЗДЕЛИТЕЛИ
         // Разделитель в вспомогательном файле.
         private const char supportSeparator = ' ';
@@ -935,5 +939,17 @@ namespace Words_Calculator
             tbSentences.Text = outputString;
         }
         #endregion
+
+        public static void getStatistics(String _partOfSpeech)
+        {
+            count = 0;
+            foreach (Word word in wordList)
+            {
+                if (word.partOfSpeech == _partOfSpeech)
+                {
+                    count++;
+                }
+            }
+        }
     }
 }

@@ -156,6 +156,49 @@ namespace Words_Calculator
                     break;
             }
 
+            // Вывод статистики.
+            switch (cmbPartsOfSpeech.SelectedIndex)
+            {
+                case 0:
+                    WordCalculator.getStatistics("Существительное");
+                    tbStatistics.Text = "Существительных " + WordCalculator.Count;
+                    break;
+                case 1:
+                    WordCalculator.getStatistics("Прилагательное");
+                    tbStatistics.Text = "Прилагательных " + WordCalculator.Count;
+                    break;
+                case 2:
+                    WordCalculator.getStatistics("Глагол");
+                    tbStatistics.Text = "Глаголов " + WordCalculator.Count;
+                    break;
+                case 3:
+                    WordCalculator.getStatistics("Наречие");
+                    tbStatistics.Text = "Наречий " + WordCalculator.Count;
+                    break;
+                case 4:
+                    WordCalculator.getStatistics("Причастие");
+                    tbStatistics.Text = "Причастий " + WordCalculator.Count;
+                    break;
+                case 5:
+                    WordCalculator.getStatistics("Деепричастие");
+                    tbStatistics.Text = "Деепричастий " + WordCalculator.Count;
+                    break;
+                default:
+                    WordCalculator.getStatistics("Существительное");
+                    tbStatistics.Text = "Существительных " + WordCalculator.Count;
+                    WordCalculator.getStatistics("Прилагательное");
+                    tbStatistics.Text += "\r\nПрилагательных " + WordCalculator.Count;
+                    WordCalculator.getStatistics("Глагол");
+                    tbStatistics.Text += "\r\nГлаголов " + WordCalculator.Count;
+                    WordCalculator.getStatistics("Наречие");
+                    tbStatistics.Text += "\r\nНаречий " + WordCalculator.Count;
+                    WordCalculator.getStatistics("Причастие");
+                    tbStatistics.Text += "\r\nПричастий " + WordCalculator.Count;
+                    WordCalculator.getStatistics("Деепричастие");
+                    tbStatistics.Text += "\r\nДеепричастий " + WordCalculator.Count;
+                    break;
+            }
+
             // СОРРЕ ЗА КОСТЫЛИ.
             if (this.Width < 700)
                 this.Width += 550;
