@@ -71,9 +71,9 @@ namespace Words_Calculator
             
             WordCalculator.divideIntoWords();
 
-           // WordCalculator.findDictionary();
+            WordCalculator.findDictionary();
 
-            //WordCalculator.findDeeprichastie();
+            WordCalculator.findDeeprichastie();
 
             WordCalculator.findAdverb();    
 
