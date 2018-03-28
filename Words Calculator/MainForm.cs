@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using System.Data;
 
@@ -11,6 +11,8 @@ namespace Words_Calculator
     public partial class mainForm : Form
     {
         private DataTable table = new DataTable();
+        private bool isSelectedPartOfSpeech = false;
+        private bool isInputText = false;
 
         public mainForm()
         {
@@ -34,6 +36,8 @@ namespace Words_Calculator
             cmbPartsOfSpeech.Items.Add("Наречие");
             cmbPartsOfSpeech.Items.Add("Причастие");
             cmbPartsOfSpeech.Items.Add("Деепричастие");
+            cmbPartsOfSpeech.Items.Add("Остальные части речи");
+            cmbPartsOfSpeech.Items.Add("Полный анализ");
 
             WordCalculator.InitGrid(ref dgrvFoundWords, ref table);
         }
@@ -53,11 +57,6 @@ namespace Words_Calculator
         private void btnSearch_Click(object sender, EventArgs e)
         {
 
-            //if (!FileHandler.IsOpenInputFile)
-            //{
-            //    WordCalculator.FileString = tbInputText.Text;
-            //}
-
             // Очистка таблицы.
             Clear(dgrvFoundWords);
 
@@ -75,13 +74,13 @@ namespace Words_Calculator
 
             WordCalculator.findDeeprichastie();
 
-            WordCalculator.findAdverb();    
+            WordCalculator.findVerb();
 
             WordCalculator.findParticiple();
 
             WordCalculator.findAdjectivesWithMinFirstKindError();
 
-            WordCalculator.findVerb();
+            WordCalculator.findAdverb();
 
             WordCalculator.findNoun();
 
@@ -114,13 +113,17 @@ namespace Words_Calculator
                     case 5:
                         WordCalculator.writeInFiles("Деепричастие");
                         break;
-                    default:
+                    case 6:
+                        WordCalculator.writeInFiles("Остальные части речи");
+                        break;
+                    case 7:
                         WordCalculator.writeInFiles("Существительное");
                         WordCalculator.writeInFiles("Прилагательное");
                         WordCalculator.writeInFiles("Глагол");
                         WordCalculator.writeInFiles("Наречие");
                         WordCalculator.writeInFiles("Причастие");
                         WordCalculator.writeInFiles("Деепричастие");
+                        WordCalculator.writeInFiles("Остальные части речи");
                         break;
                 }
             }
@@ -146,13 +149,17 @@ namespace Words_Calculator
                 case 5:
                     WordCalculator.FillGrid("Деепричастие", ref dgrvFoundWords, ref table);
                     break;
-                default:
+                case 6:
+                    WordCalculator.FillGrid("Остальные части речи", ref dgrvFoundWords, ref table);
+                    break;
+                case 7:
                     WordCalculator.FillGrid("Существительное", ref dgrvFoundWords, ref table);
                     WordCalculator.FillGrid("Прилагательное", ref dgrvFoundWords, ref table);
                     WordCalculator.FillGrid("Глагол", ref dgrvFoundWords, ref table);
                     WordCalculator.FillGrid("Наречие", ref dgrvFoundWords, ref table);
                     WordCalculator.FillGrid("Причастие", ref dgrvFoundWords, ref table);
                     WordCalculator.FillGrid("Деепричастие", ref dgrvFoundWords, ref table);
+                    WordCalculator.FillGrid("Остальные части речи", ref dgrvFoundWords, ref table);
                     break;
             }
 
@@ -160,45 +167,56 @@ namespace Words_Calculator
             switch (cmbPartsOfSpeech.SelectedIndex)
             {
                 case 0:
-                    WordCalculator.getStatistics("Существительное");
-                    tbStatistics.Text = "Существительных " + WordCalculator.Count;
+                    WordCalculator.DisplayStatistics("Существительное");
+                    tbStatistics.Text = "Существительных " + WordCalculator.CountForOne;
+                    tbStatistics.Text += "\r\nВсего слов " + WordCalculator.CountForMany;
                     break;
                 case 1:
-                    WordCalculator.getStatistics("Прилагательное");
-                    tbStatistics.Text = "Прилагательных " + WordCalculator.Count;
+                    WordCalculator.DisplayStatistics("Прилагательное");
+                    tbStatistics.Text = "Прилагательных " + WordCalculator.CountForOne;
+                    tbStatistics.Text += "\r\nВсего слов " + WordCalculator.CountForMany;
                     break;
                 case 2:
-                    WordCalculator.getStatistics("Глагол");
-                    tbStatistics.Text = "Глаголов " + WordCalculator.Count;
+                    WordCalculator.DisplayStatistics("Глагол");
+                    tbStatistics.Text = "Глаголов " + WordCalculator.CountForOne;
+                    tbStatistics.Text += "\r\nВсего слов " + WordCalculator.CountForMany;
                     break;
                 case 3:
-                    WordCalculator.getStatistics("Наречие");
-                    tbStatistics.Text = "Наречий " + WordCalculator.Count;
+                    WordCalculator.DisplayStatistics("Наречие");
+                    tbStatistics.Text = "Наречий " + WordCalculator.CountForOne;
+                    tbStatistics.Text += "\r\nВсего слов " + WordCalculator.CountForMany;
                     break;
                 case 4:
-                    WordCalculator.getStatistics("Причастие");
-                    tbStatistics.Text = "Причастий " + WordCalculator.Count;
+                    WordCalculator.DisplayStatistics("Причастие");
+                    tbStatistics.Text = "Причастий " + WordCalculator.CountForOne;
+                    tbStatistics.Text += "\r\nВсего слов " + WordCalculator.CountForMany;
                     break;
                 case 5:
-                    WordCalculator.getStatistics("Деепричастие");
-                    tbStatistics.Text = "Деепричастий " + WordCalculator.Count;
+                    WordCalculator.DisplayStatistics("Деепричастие");
+                    tbStatistics.Text = "Деепричастий " + WordCalculator.CountForOne;
+                    tbStatistics.Text += "\r\nВсего слов " + WordCalculator.CountForMany;
                     break;
-                default:
-                    WordCalculator.getStatistics("Существительное");
-                    tbStatistics.Text = "Существительных " + WordCalculator.Count;
-                    WordCalculator.getStatistics("Прилагательное");
-                    tbStatistics.Text += "\r\nПрилагательных " + WordCalculator.Count;
-                    WordCalculator.getStatistics("Глагол");
-                    tbStatistics.Text += "\r\nГлаголов " + WordCalculator.Count;
-                    WordCalculator.getStatistics("Наречие");
-                    tbStatistics.Text += "\r\nНаречий " + WordCalculator.Count;
-                    WordCalculator.getStatistics("Причастие");
-                    tbStatistics.Text += "\r\nПричастий " + WordCalculator.Count;
-                    WordCalculator.getStatistics("Деепричастие");
-                    tbStatistics.Text += "\r\nДеепричастий " + WordCalculator.Count;
+                case 6:
+                    WordCalculator.DisplayStatistics("Остальные части речи");
+                    tbStatistics.Text = "Остальные части " + WordCalculator.CountForOne;
+                    tbStatistics.Text += "\r\nВсего слов " + WordCalculator.CountForMany;
+                    break;
+                case 7:
+                    WordCalculator.DisplayStatistics("Существительное");
+                    tbStatistics.Text = "Существительных " + WordCalculator.CountForOne;
+                    WordCalculator.DisplayStatistics("Прилагательное");
+                    tbStatistics.Text += "\r\nПрилагательных " + WordCalculator.CountForOne;
+                    WordCalculator.DisplayStatistics("Глагол");
+                    tbStatistics.Text += "\r\nГлаголов " + WordCalculator.CountForOne;
+                    WordCalculator.DisplayStatistics("Наречие");
+                    tbStatistics.Text += "\r\nНаречий " + WordCalculator.CountForOne;
+                    WordCalculator.DisplayStatistics("Причастие");
+                    tbStatistics.Text += "\r\nПричастий " + WordCalculator.CountForOne;
+                    WordCalculator.DisplayStatistics("Деепричастие");
+                    tbStatistics.Text += "\r\nДеепричастий " + WordCalculator.CountForOne;
+                    tbStatistics.Text += "\r\nВсего слов " + WordCalculator.CountForMany;
                     break;
             }
-
             // СОРРЕ ЗА КОСТЫЛИ.
             if (this.Width < 700)
                 this.Width += 550;
@@ -248,12 +266,14 @@ namespace Words_Calculator
             // Если в Textbox отсутствует текст, то кнопка "Анализ" блокируется, иначе - нет.
             if (tbInputText.Text == "")
             {
-                btnSearch.Enabled = false;
+                isInputText = false;
             }
             else
             {
-                btnSearch.Enabled = true;
+                isInputText = true;
             }
+
+            btnSearch.Enabled = isSelectedPartOfSpeech && isInputText;
         }
 
         /// <summary>
@@ -288,6 +308,14 @@ namespace Words_Calculator
                 if (this.Width > 700)
                     this.Width -= 550;
             }
+        }
+
+        private void cmbPartsOfSpeech_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            isSelectedPartOfSpeech  = true;
+
+            btnSearch.Enabled = isSelectedPartOfSpeech && isInputText;
         }
     }
 }

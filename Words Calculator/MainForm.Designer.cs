@@ -125,6 +125,7 @@
             this.cmbPartsOfSpeech.Name = "cmbPartsOfSpeech";
             this.cmbPartsOfSpeech.Size = new System.Drawing.Size(208, 21);
             this.cmbPartsOfSpeech.TabIndex = 19;
+            this.cmbPartsOfSpeech.SelectedIndexChanged += new System.EventHandler(this.cmbPartsOfSpeech_SelectedIndexChanged);
             // 
             // btnClearInputTextBox
             // 
@@ -141,7 +142,7 @@
             this.dgrvFoundWords.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgrvFoundWords.Location = new System.Drawing.Point(711, 57);
             this.dgrvFoundWords.Name = "dgrvFoundWords";
-            this.dgrvFoundWords.Size = new System.Drawing.Size(220, 504);
+            this.dgrvFoundWords.Size = new System.Drawing.Size(220, 398);
             this.dgrvFoundWords.TabIndex = 21;
             this.dgrvFoundWords.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.drwvFoundWords_CellClick);
             // 
@@ -177,7 +178,7 @@
             this.tbSentences.Location = new System.Drawing.Point(961, 57);
             this.tbSentences.Multiline = true;
             this.tbSentences.Name = "tbSentences";
-            this.tbSentences.Size = new System.Drawing.Size(206, 317);
+            this.tbSentences.Size = new System.Drawing.Size(206, 215);
             this.tbSentences.TabIndex = 25;
             this.tbSentences.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -192,16 +193,16 @@
             // 
             // tbStatistics
             // 
-            this.tbStatistics.Location = new System.Drawing.Point(961, 444);
+            this.tbStatistics.Location = new System.Drawing.Point(961, 338);
             this.tbStatistics.Multiline = true;
             this.tbStatistics.Name = "tbStatistics";
-            this.tbStatistics.Size = new System.Drawing.Size(209, 117);
+            this.tbStatistics.Size = new System.Drawing.Size(206, 117);
             this.tbStatistics.TabIndex = 27;
             // 
             // lblStatistics
             // 
             this.lblStatistics.AutoSize = true;
-            this.lblStatistics.Location = new System.Drawing.Point(958, 413);
+            this.lblStatistics.Location = new System.Drawing.Point(958, 307);
             this.lblStatistics.Name = "lblStatistics";
             this.lblStatistics.Size = new System.Drawing.Size(68, 13);
             this.lblStatistics.TabIndex = 28;
@@ -211,7 +212,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(669, 470);
+            this.ClientSize = new System.Drawing.Size(668, 470);
             this.Controls.Add(this.lblStatistics);
             this.Controls.Add(this.tbStatistics);
             this.Controls.Add(this.lblSentences);

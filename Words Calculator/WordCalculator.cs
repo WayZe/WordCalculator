@@ -21,8 +21,11 @@ namespace Words_Calculator
         public static string FileString { get => fileString; set => fileString = value; }
 
         // Счетчик одной части речи.
-        private static int count = 0;
-        public static int Count { get => count; set => count = value; }
+        private static int countForOne = 0;
+        public static int CountForOne { get => countForOne; set => countForOne = value; }
+
+        private static int countForMany = 0;
+        public static int CountForMany { get => countForMany; set => countForMany = value; }
 
         ///РАЗДЕЛИТЕЛИ
         // Разделитель в вспомогательном файле.
@@ -133,6 +136,7 @@ namespace Words_Calculator
                 {
                     String tmpString = streamReader.ReadLine();
 
+
                     // Инициализация списка окончаний ПРИЛАГАТЕЛЬНЫХ
                     tmpString = streamReader.ReadLine();
                     arrayOfAdjectiveEnds = tmpString.Split(supportSeparator);
@@ -140,7 +144,6 @@ namespace Words_Calculator
                     // Инициализация списка суффиксов ПРИЛАГАТЕЛЬНЫХ
                     tmpString = streamReader.ReadLine();
                     arrayOfAdjectiveSuffixes = tmpString.Split(supportSeparator);
-
 
                     tmpString = streamReader.ReadLine();
 
@@ -151,7 +154,6 @@ namespace Words_Calculator
                     // Инициализация списка окончаний ГЛАГОЛОВ 
                     tmpString = streamReader.ReadLine();
                     arrayOfVerbEnds = tmpString.Split(supportSeparator);
-
 
                     tmpString = streamReader.ReadLine();
 
@@ -167,7 +169,6 @@ namespace Words_Calculator
                     tmpString = streamReader.ReadLine();
                     arrayOfDictionaryAdverbs = tmpString.Split(supportSeparator);
 
-
                     tmpString = streamReader.ReadLine();
 
                     // Инициализация списка суффиксов ПРИЧАСТИЙ
@@ -182,12 +183,13 @@ namespace Words_Calculator
                     tmpString = streamReader.ReadLine();
                     arrayOfParticiplePostfixes = tmpString.Split(supportSeparator);
 
-
                     tmpString = streamReader.ReadLine();
 
                     // Инициализация списка суффиксов ДЕЕПРИЧАСТИЙ 
                     tmpString = streamReader.ReadLine();
                     arrayOfDeeprSuffixes = tmpString.Split(supportSeparator);
+
+                    tmpString = streamReader.ReadLine();
 
                     // Инициализация списка начал ЧИСЛИТЕЛЬНЫХ
                     tmpString = streamReader.ReadLine();
@@ -407,7 +409,7 @@ namespace Words_Calculator
                     // Проверка на то является ли currentWord прилагательным
                     for (var endNumber = 0; endNumber < arrayOfAdverbEnds.Length; endNumber++)
                     {
-                        int wordLengthWithoutEnd = currentWord.Length - arrayOfAdjectiveEnds[endNumber].Length;
+                        int wordLengthWithoutEnd = currentWord.Length - arrayOfAdverbEnds[endNumber].Length;
                         if (wordLengthWithoutEnd > 0)
                         {
                             if (currentWord.Substring(wordLengthWithoutEnd) == arrayOfAdverbEnds[endNumber])
@@ -700,7 +702,7 @@ namespace Words_Calculator
                 if (isDictionary)
                 {
                     Word tempWord = wordList[elementNumber];
-                    tempWord = new Word(tempWord.word, "Слова из словаря", tempWord.sentenceNumber, tempWord.wordAmount);
+                    tempWord = new Word(tempWord.word, "Остальные части речи", tempWord.sentenceNumber, tempWord.wordAmount);
                     wordList[elementNumber] = tempWord;
                 }
             }
@@ -940,14 +942,17 @@ namespace Words_Calculator
         }
         #endregion
 
-        public static void getStatistics(String _partOfSpeech)
+        // Получение статистики.
+        public static void DisplayStatistics(String _partOfSpeech)
         {
-            count = 0;
+            countForOne = 0;
+            countForMany = 0;
             foreach (Word word in wordList)
             {
+                countForMany += word.wordAmount;
                 if (word.partOfSpeech == _partOfSpeech)
                 {
-                    count++;
+                    countForOne += word.wordAmount;
                 }
             }
         }
